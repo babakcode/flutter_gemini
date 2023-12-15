@@ -11,7 +11,7 @@ class GeminiService {
   final String apiKey;
 
   GeminiService(this.dio, {required this.apiKey}) {
-    if (!kReleaseMode && FlutterGemini.enableDebugging) {
+    if (!kReleaseMode && Gemini.enableDebugging) {
       dio.interceptors
           .add(LogInterceptor(requestBody: true, responseBody: true));
     }

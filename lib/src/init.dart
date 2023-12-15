@@ -11,19 +11,19 @@ import 'package:dio/dio.dart';
 import 'implement/gemini_implement.dart';
 import 'models/gemini_safety/gemini_safety.dart';
 
-/// [FlutterGemini]
+/// [Gemini]
 /// Flutter Google Gemini SDK. Google Gemini is a set of cutting-edge large language models
 ///   (LLMs) designed to be the driving force behind Google's future AI initiatives.
 ///   implements [GeminiInterface]
 ///   and [GeminiInterface] defines all methods of Gemini
-class FlutterGemini implements GeminiInterface {
+class Gemini implements GeminiInterface {
 
   /// [enableDebugging]
   /// to see request progress
   static bool enableDebugging = false;
 
-  /// private constructor [FlutterGemini._]
-  FlutterGemini._({
+  /// private constructor [Gemini._]
+  Gemini._({
     /// [apiKey] is required property
     required String apiKey,
     /// theses properties are optional
@@ -38,26 +38,26 @@ class FlutterGemini implements GeminiInterface {
           generationConfig: generationConfig,
         );
 
-  /// singleton [instance] from main [FlutterGemini] class
-  static late FlutterGemini instance;
+  /// singleton [instance] from main [Gemini] class
+  static late Gemini instance;
   static bool _firstInit = true;
 
   /// initial properties
   ///  - [_impl] functions logic
   GeminiImpl _impl;
 
-  /// singleton initialize [FlutterGemini.init]
-  factory FlutterGemini.init(
+  /// singleton initialize [Gemini.init]
+  factory Gemini.init(
       {required String apiKey,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
       bool? enableDebugging}) {
     if (enableDebugging != null) {
-      FlutterGemini.enableDebugging = enableDebugging;
+      Gemini.enableDebugging = enableDebugging;
     }
     if (_firstInit) {
       _firstInit = false;
-      instance = FlutterGemini._(
+      instance = Gemini._(
           apiKey: apiKey,
           safetySettings: safetySettings,
           generationConfig: generationConfig);
