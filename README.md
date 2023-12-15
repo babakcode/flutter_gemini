@@ -8,16 +8,16 @@ This package provides a powerful bridge between your Flutter application and Goo
 
 ## Features
 
-- Set up your API key [scroll](#getting-started)
-- Initialize gemini [scroll](#initialize-gemini)
-- Content-based APIs [scroll](#content-based-apis)
-    - [x]Text-only input [scroll](#text-only-input)
-    - [x]Text-and-image input [scroll](#text-and-image-input)
-    - [x]Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
-    - [x]Count tokens [scroll](#count-tokens)
-    - [x]Model info [scroll](#model-info)
-    - [x]List models [scroll](#list-models)
-    - [ ]Unimplemented methods [scroll](#unimplemented-methods)
+[x] Set up your API key [scroll](#getting-started)
+[x] Initialize gemini [scroll](#initialize-gemini)
+[x] Content-based APIs [scroll](#content-based-apis)
+    - [x] Text-only input [scroll](#text-only-input)
+    - [x] Text-and-image input [scroll](#text-and-image-input)
+    - [x] Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
+    - [x] Count tokens [scroll](#count-tokens)
+    - [x] Model info [scroll](#model-info)
+    - [x] List models [scroll](#list-models)
+    - [ ] Unimplemented methods [scroll](#unimplemented-methods)
 
 ## Getting started
 
