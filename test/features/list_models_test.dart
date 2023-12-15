@@ -11,9 +11,7 @@ void main() {
     final gemini = Gemini.instance;
     await gemini
         .listModels()
-        .then((value) => print(value))
-
-        /// list
+        .then((models) => log(models.toString()))
         .catchError((e) => log('listModels', error: e));
   });
 }

@@ -93,8 +93,6 @@ class GeminiService {
           responseType:
               ResponseType.stream), // Set the response type to `stream`.
     );
-    print("-----------response stream---------");
-    print(rs.data.stream);
     return rs.data.stream;
   }
 }

@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 import 'package:flutter_gemini/src/models/content/content.dart';
-import 'package:flutter_gemini/src/models/parts/parts.dart';
-
 import '../config/constants.dart';
 import '../models/gemini_model/gemini_model.dart';
 import '../models/gemini_response/gemini_response.dart';

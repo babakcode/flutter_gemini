@@ -11,7 +11,7 @@ void main() {
     final gemini = Gemini.instance;
     await gemini
         .info(model: 'gemini-pro')
-        .then((info) => print(info))
+        .then((info) => log(info.toString()))
         .catchError((e) => log('text input exception', error: e));
   });
 }
