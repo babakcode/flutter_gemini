@@ -13,7 +13,7 @@ void main() {
 
     /// text
     await gemini
-        .textInput("Write a story about a magic backpack.")
+        .text("Write a story about a magic backpack.")
         .then((value) => log(value?.content?.parts?.last.text ?? ''))
         .catchError((e) => log('text input exception', error: e));
 

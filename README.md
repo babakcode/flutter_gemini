@@ -50,7 +50,7 @@ final gemini = Gemini.instance;
 This feature lets you perform natural language processing (NLP) tasks such as text completion and summarization.
 
 ```dart
-  gemini.textInput("Write a story about a magic backpack.")
+  gemini.text("Write a story about a magic backpack.")
     .then((value) => print(value?.content?.parts?.last.text))
     .catchError((e) => print(e));
 ```

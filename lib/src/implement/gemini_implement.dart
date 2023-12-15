@@ -109,7 +109,7 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future<Candidates?> textInput(String text,
+  Future<Candidates?> text(String text,
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {

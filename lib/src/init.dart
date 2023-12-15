@@ -154,15 +154,15 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
-  /// [textInput] Use the `generateContent` method to generate a response
+  /// [text] Use the `generateContent` method to generate a response
   /// from the model given an input message.
   /// If the input contains only text, use the `gemini-pro` model.
   @override
-  Future<Candidates?> textInput(String text,
+  Future<Candidates?> text(String text,
           {String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
-      _impl.textInput(text,
+      _impl.text(text,
           generationConfig: generationConfig,
           safetySettings: safetySettings,
           modelName: modelName);

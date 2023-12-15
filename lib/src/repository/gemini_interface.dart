@@ -17,10 +17,10 @@ abstract class GeminiInterface {
   /// information about that model such as version, display name, input token limit, etc.
   Future<GeminiModel> info({required String model});
 
-  /// [textInput] Use the `generateContent` method to generate a response
+  /// [text] Use the `generateContent` method to generate a response
   /// from the model given an input message.
   /// If the input contains only text, use the `gemini-pro` model.
-  Future<Candidates?> textInput(
+  Future<Candidates?> text(
     String text, {
     String? modelName,
     List<SafetySetting>? safetySettings,
