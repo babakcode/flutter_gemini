@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:flutter_gemini/src/models/candidates/candidates.dart';
+
 import 'config/constants.dart';
 import 'implement/gemini_service.dart';
 import 'models/embedding/embedding_input_type.dart';
@@ -117,7 +119,7 @@ class Gemini implements GeminiInterface {
           modelName: modelName);
 
   @override
-  Future<GeminiResponse> textInput(String text,
+  Future<Candidates?> textInput(String text,
           {String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>

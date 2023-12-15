@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flutter_gemini/src/models/candidates/candidates.dart';
+
 import '../models/embedding/embedding_input_type.dart';
 import '../models/gemini_model/gemini_model.dart';
 import '../models/gemini_response/gemini_response.dart';
@@ -21,7 +23,7 @@ abstract class GeminiInterface {
   /// [textInput] Use the `generateContent` method to generate a response
   /// from the model given an input message.
   /// If the input contains only text, use the `gemini-pro` model.
-  Future<GeminiResponse> textInput(
+  Future<Candidates?> textInput(
     String text, {
     String? modelName,
     List<SafetySetting>? safetySettings,

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter_gemini/src/models/candidates/candidates.dart';
+
 import '../config/constants.dart';
 import '../models/embedding/embedding_input_type.dart';
 import '../models/gemini_model/gemini_model.dart';
@@ -85,7 +87,7 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future<GeminiResponse> textInput(String text,
+  Future<Candidates?> textInput(String text,
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
@@ -104,6 +106,6 @@ class GeminiImpl implements GeminiInterface {
       safetySettings: safetySettings,
     );
 
-    return GeminiResponse.fromJson(response.data);
+    return GeminiResponse.fromJson(response.data).candidates?.last;
   }
 }

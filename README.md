@@ -1,39 +1,77 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Google DeepMind Gemini
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+Google Gemini is a set of cutting-edge large language models (LLMs) designed to be the driving force behind Google's future AI initiatives.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+<img  alt="Gemini " src="https://raw.githubusercontent.com/ged-flod/google_gemini/main/assets/gemini.jpeg"/>
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This package provides a powerful bridge between your Flutter application and Google's revolutionary Gemini AI. It empowers you to seamlessly integrate Gemini's capabilities into your app, unlocking a world of possibilities for building innovative, intelligent, and engaging experiences that redefine user interaction.
+
+
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- [Set up your API key](#getting-started)
+- [Initialize gemini](#initialize-gemini)
+- [Content based APIs](#content-based-apis)
+    - [Text-only input](#text-only-input)
+    - [Text-and-image input](#text-and-image-input)
+- [Gemini Candidates](#gemini-response)
+- [Gemini Methods](#gemini-methods)
+
+
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use the Gemini API, you'll need an API key. If you don't already have one, create a key in Google AI Studio. [Get an API key](https://ai.google.dev/).
 
-## Usage
+## Initialize gemini
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
+To initialize gemini you must add init factory in main function.
 ```dart
-const like = 'sample';
+void main() {
+
+  /// add this line
+  Gemini.init(apiKey: '--- Your Gemini Api Key ---');
+
+  runApp(const MyApp());
+}
 ```
 
-## Additional information
+Now you can create a instance
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+final gemini = Gemini.instance;
+```
+
+## Content based APIs
+
+### Text-only input
+
+This feature lets you perform natural language processing (NLP) tasks such as text completion and summarization.
+
+```dart
+  gemini.textInput("Write a story about a magic backpack.")
+    .then((value) => print(value?.content?.parts?.last.text))
+    .catchError((e) => print(e));
+```
+
+### Text-and-image input
+
+If the input contains both text and image, You can send a text prompt with an image to the gemini-pro-vision model to perform a vision related task. For example, captioning an image or identifying what's in an image.
+
+```dart
+// In progress
+```
+
+
+## Gemini Response
+
+```dart
+// In progress
+```
+
+## Gemini Methods
+
+```dart
+// In progress
+```
