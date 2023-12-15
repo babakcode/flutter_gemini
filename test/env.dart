@@ -1,0 +1,1 @@
+String geminiKey = '--- Your Gemini Api Key ---';
