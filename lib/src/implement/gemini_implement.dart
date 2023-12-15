@@ -11,6 +11,8 @@ import '../models/generation_config/generation_config.dart';
 import '../repository/gemini_interface.dart';
 import 'gemini_service.dart';
 
+/// [GeminiImpl]
+/// In this class we declare and implement all the functions body
 class GeminiImpl implements GeminiInterface {
   final GeminiService api;
 
@@ -80,10 +82,23 @@ class GeminiImpl implements GeminiInterface {
   Future textAndImageInput(String text, Uint8List image,
       {String? modelName,
       List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) {
+      GenerationConfig? generationConfig}) async {
     base64Encode(image);
-    // TODO: implement textAndImageInput
-    throw UnimplementedError();
+    final response = await api.post(
+      "${modelName ?? 'Constants.defaultModel'}:${Constants.defaultGenerateType}",
+      data: {
+        'contents': [
+          {
+            "parts": [
+              {"text": text}
+            ]
+          }
+        ]
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+
   }
 
   @override

@@ -10,13 +10,13 @@ This package provides a powerful bridge between your Flutter application and Goo
 
 ## Features
 
-- [Set up your API key](#getting-started)
-- [Initialize gemini](#initialize-gemini)
-- [Content-based APIs](#content-based-apis)
-    - [Text-only input](#text-only-input)
-    - [Text-and-image input](#text-and-image-input)
-- [Gemini Candidates](#gemini-response)
-- [Gemini Methods](#gemini-methods)
+- Set up your API key [scroll](#getting-started)
+- Initialize gemini [scroll](#initialize-gemini)
+- Content-based APIs [scroll](#content-based-apis)
+    - Text-only input [scroll](#text-only-input)
+    - Text-and-image input [scroll](#text-and-image-input)
+- Gemini Candidates [scroll](#gemini-response)
+- Gemini Methods [scroll](#gemini-methods)
 
 
 

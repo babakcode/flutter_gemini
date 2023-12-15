@@ -5,11 +5,13 @@ import '../prompt_feedback/prompt_feedback.dart';
 part 'gemini_response.freezed.dart';
 part 'gemini_response.g.dart';
 
+
+/// [GeminiResponse] is the value in the response of request
 @unfreezed
 class GeminiResponse with _$GeminiResponse {
   factory GeminiResponse({
-    @JsonKey(name: 'candidates') List<Candidates>? candidates,
-    @JsonKey(name: 'promptFeedback') PromptFeedback? promptFeedback,
+    List<Candidates>? candidates,
+    PromptFeedback? promptFeedback,
   }) = _GeminiResponse;
 
   factory GeminiResponse.fromJson(Map<String, Object?> json) =>

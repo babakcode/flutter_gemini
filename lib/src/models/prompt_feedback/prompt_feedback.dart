@@ -4,10 +4,11 @@ import '../safety_ratings/safety_ratings.dart';
 part 'prompt_feedback.freezed.dart';
 part 'prompt_feedback.g.dart';
 
+/// [PromptFeedback] is the value in the response of request
 @unfreezed
 class PromptFeedback with _$PromptFeedback {
   factory PromptFeedback({
-    @JsonKey(name: 'safetyRatings') List<SafetyRatings>? safetyRatings,
+    List<SafetyRatings>? safetyRatings,
   }) = _PromptFeedback;
 
   factory PromptFeedback.fromJson(Map<String, Object?> json) =>

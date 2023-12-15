@@ -4,11 +4,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'safety_ratings.freezed.dart';
 part 'safety_ratings.g.dart';
 
+/// [SafetyRatings] is the value in the response of request
 @unfreezed
 class SafetyRatings with _$SafetyRatings {
   factory SafetyRatings({
-    @JsonKey(name: 'category') String? category,
-    @JsonKey(name: 'probability') String? probability,
+    String? category,
+    String? probability,
   }) = _SafetyRatings;
 
   factory SafetyRatings.fromJson(Map<String, Object?> json) =>

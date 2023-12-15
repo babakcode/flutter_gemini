@@ -4,14 +4,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'generation_config.freezed.dart';
 part 'generation_config.g.dart';
 
+
+/// [GenerationConfig] is uses when we want to declare response types
 @unfreezed
 class GenerationConfig with _$GenerationConfig {
   factory GenerationConfig({
-    @JsonKey(name: 'stopSequences') List<String>? stopSequences,
-    @JsonKey(name: 'temperature') double? temperature,
-    @JsonKey(name: 'maxOutputTokens') int? maxOutputTokens,
-    @JsonKey(name: 'topP') double? topP,
-    @JsonKey(name: 'topK') int? topK,
+    List<String>? stopSequences,
+    double? temperature,
+    int? maxOutputTokens,
+    double? topP,
+    int? topK,
   }) = _GenerationConfig;
 
   factory GenerationConfig.fromJson(Map<String, Object?> json) =>

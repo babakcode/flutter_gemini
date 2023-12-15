@@ -11,13 +11,22 @@ import 'package:dio/dio.dart';
 import 'implement/gemini_implement.dart';
 import 'models/gemini_safety/gemini_safety.dart';
 
-class Gemini implements GeminiInterface {
+/// [FlutterGemini]
+/// Flutter Google Gemini SDK. Google Gemini is a set of cutting-edge large language models
+///   (LLMs) designed to be the driving force behind Google's future AI initiatives.
+///   implements [GeminiInterface]
+///   and [GeminiInterface] defines all methods of Gemini
+class FlutterGemini implements GeminiInterface {
+
+  /// [enableDebugging]
   /// to see request progress
   static bool enableDebugging = false;
 
-  // private constructor
-  Gemini._({
+  /// private constructor [FlutterGemini._]
+  FlutterGemini._({
+    /// [apiKey] is required property
     required String apiKey,
+    /// theses properties are optional
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
   }) : _impl = GeminiImpl(
@@ -29,25 +38,26 @@ class Gemini implements GeminiInterface {
           generationConfig: generationConfig,
         );
 
-  // singleton instance
-  static late Gemini instance;
+  /// singleton [instance] from main [FlutterGemini] class
+  static late FlutterGemini instance;
   static bool _firstInit = true;
 
-  // initial properties
+  /// initial properties
+  ///  - [_impl] functions logic
   GeminiImpl _impl;
 
-  /// singleton initialize
-  factory Gemini.init(
+  /// singleton initialize [FlutterGemini.init]
+  factory FlutterGemini.init(
       {required String apiKey,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
       bool? enableDebugging}) {
     if (enableDebugging != null) {
-      Gemini.enableDebugging = enableDebugging;
+      FlutterGemini.enableDebugging = enableDebugging;
     }
     if (_firstInit) {
       _firstInit = false;
-      instance = Gemini._(
+      instance = FlutterGemini._(
           apiKey: apiKey,
           safetySettings: safetySettings,
           generationConfig: generationConfig);
@@ -55,6 +65,10 @@ class Gemini implements GeminiInterface {
     return instance;
   }
 
+
+  /// [chat] or `Multi-turn conversations`
+  /// Using Gemini, you can build freeform conversations across multiple turns.
+  /// * not implemented yet
   @override
   Future chat(List<String> chats,
           {String? modelName,
@@ -65,6 +79,9 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
+  /// [countTokens] When using long prompts, it might be useful to count tokens
+  /// before sending any content to the model.
+  /// * not implemented yet
   @override
   Future countTokens(String text,
           {String? modelName,
@@ -75,6 +92,15 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
+  /// [embedding] is a technique used to represent information as a
+  /// list of floating point numbers in an array.
+  /// With Gemini, you can represent text (words, sentences, and blocks of text)
+  /// in a vectorized form, making it easier to compare and contrast embeddings.
+  /// For example, two texts that share a similar subject matter or sentiment
+  /// should have similar embeddings, which can be identified through mathematical
+  /// comparison techniques such as cosine similarity.
+  ///
+  /// Use the `embedding-001` model with either `embedContents` or `batchEmbedContents`:
   @override
   Future embedding(String text,
           {EmbeddingInputType type = EmbeddingInputType.batchEmbedContents,
@@ -87,12 +113,22 @@ class Gemini implements GeminiInterface {
           modelName: modelName,
           type: type);
 
+  /// [info]
+  /// If you `GET` a model's URL, the API uses the `get` method to return
+  /// information about that model such as version, display name, input token limit, etc.
   @override
   Future<GeminiModel> info({required String model}) => _impl.info(model: model);
 
+  /// [listModels]
+  /// If you `GET` the `models` directory, it uses the `list` method to list
+  /// all of the models available through the API, including both the Gemini and PaLM family models.
   @override
   Future<List<GeminiModel>> listModels() => _impl.listModels();
 
+  /// [streamGenerateContent] By default, the model returns a response after
+  /// completing the entire generation process.
+  /// You can achieve faster interactions by not waiting
+  /// for the entire result, and instead use streaming to handle partial results.
   @override
   Stream streamGenerateContent(String text,
           {String? modelName,
@@ -103,6 +139,8 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
+  /// [textAndImageInput] If the input contains both text and image, use
+  /// the `gemini-pro-vision` model. The following snippets help you build a request and send it to the REST API.
   @override
   Future textAndImageInput(String text, Uint8List image,
           {String? modelName,
@@ -113,6 +151,9 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
+  /// [textInput] Use the `generateContent` method to generate a response
+  /// from the model given an input message.
+  /// If the input contains only text, use the `gemini-pro` model.
   @override
   Future<Candidates?> textInput(String text,
           {String? modelName,

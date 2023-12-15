@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
 import '../init.dart';
 import '../models/gemini_safety/gemini_safety.dart';
 import '../models/generation_config/generation_config.dart';
 
+/// [GeminiService] is api helper service class
 class GeminiService {
   final Dio dio;
   final String apiKey;
 
   GeminiService(this.dio, {required this.apiKey}) {
-    if (!kReleaseMode && Gemini.enableDebugging) {
+    if (!kReleaseMode && FlutterGemini.enableDebugging) {
       dio.interceptors
           .add(LogInterceptor(requestBody: true, responseBody: true));
     }
