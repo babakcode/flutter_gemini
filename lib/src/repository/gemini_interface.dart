@@ -40,6 +40,7 @@ abstract class GeminiInterface {
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
   });
+
   /// [embedContents] description in upper comments
   Future embedContents(
     String text, {

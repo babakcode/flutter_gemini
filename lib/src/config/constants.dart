@@ -5,8 +5,7 @@ class Constants {
   static const String defaultModel = 'models/gemini-pro';
   static const String defaultVersion = 'v1beta';
   static const String defaultGenerateType = 'generateContent';
-  static const String baseUrl =
-      'https://generativelanguage.googleapis.com/';
+  static const String baseUrl = 'https://generativelanguage.googleapis.com/';
 
   static List<GeminiModel> get geminiDefaultModels => [
         {

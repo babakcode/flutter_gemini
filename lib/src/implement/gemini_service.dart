@@ -61,11 +61,11 @@ class GeminiService {
   }
 
   Future<Stream> postStream(
-      String route, {
-        required Map<String, Object>? data,
-        GenerationConfig? generationConfig,
-        List<SafetySetting>? safetySettings,
-      }) async {
+    String route, {
+    required Map<String, Object>? data,
+    GenerationConfig? generationConfig,
+    List<SafetySetting>? safetySettings,
+  }) async {
     /// add local safetySettings or global safetySetting which added
     /// in [init] constructor
     if (safetySettings != null || this.safetySettings != null) {
@@ -89,7 +89,9 @@ class GeminiService {
     final rs = await dio.get(
       route,
       queryParameters: {'key': apiKey},
-      options: Options(responseType: ResponseType.stream), // Set the response type to `stream`.
+      options: Options(
+          responseType:
+              ResponseType.stream), // Set the response type to `stream`.
     );
     print("-----------response stream---------");
     print(rs.data.stream);

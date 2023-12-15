@@ -4,8 +4,7 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 import '../flutter_gemini_test.dart';
 
 void main() {
-  Gemini.init(
-      apiKey: apiKey, enableDebugging: true);
+  Gemini.init(apiKey: apiKey, enableDebugging: true);
 
   test('check gemini to generate simple text', () async {
     /// an instance

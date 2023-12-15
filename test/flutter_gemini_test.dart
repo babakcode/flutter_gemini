@@ -5,8 +5,7 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 const apiKey = '--- Your Gemini Api Key ---';
 
 void main() {
-  Gemini.init(
-      apiKey: apiKey, enableDebugging: true);
+  Gemini.init(apiKey: apiKey, enableDebugging: true);
 
   test('check gemini to generate simple text', () async {
     /// an instance

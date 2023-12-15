@@ -37,9 +37,7 @@ class GeminiImpl implements GeminiInterface {
       GenerationConfig? generationConfig}) async {
     final response = await api.post(
       "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
-      data: {
-        'contents': chats.map((e) => e.toJson()).toList()
-      },
+      data: {'contents': chats.map((e) => e.toJson()).toList()},
       generationConfig: generationConfig,
       safetySettings: safetySettings,
     );
@@ -52,7 +50,7 @@ class GeminiImpl implements GeminiInterface {
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-    try{
+    try {
       final response = await api.post(
         "${modelName ?? Constants.defaultModel}:countTokens",
         data: {
@@ -68,28 +66,27 @@ class GeminiImpl implements GeminiInterface {
         safetySettings: safetySettings,
       );
       return response.data?['totalTokens'];
-    }catch(e) {
+    } catch (e) {
       rethrow;
     }
   }
 
-
   @override
   Future<GeminiModel> info({required String model}) async {
-    try{
+    try {
       final response = await api.get('models/$model');
       return GeminiModel.fromJson(response.data);
-    }catch(e) {
+    } catch (e) {
       rethrow;
     }
   }
 
   @override
   Future<List<GeminiModel>> listModels() async {
-    try{
+    try {
       final response = await api.get('models');
       return GeminiModel.jsonToList(response.data['models']);
-    }catch(e) {
+    } catch (e) {
       rethrow;
     }
   }
@@ -98,23 +95,24 @@ class GeminiImpl implements GeminiInterface {
   Future<Stream> streamGenerateContent(String text,
       {String? modelName,
       List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig})async {
-    throw UnimplementedError('Unimplemented method. This feature will be added in the newer versions');
-  //   final response = await api.postStream(
-  //   "${modelName ?? Constants.defaultModel}:streamGenerateContent",
-  //   data: {
-  //     'contents': [
-  //       {
-  //         "parts": [
-  //           {"text": text},
-  //         ]
-  //       }
-  //     ]
-  //   },
-  //   generationConfig: generationConfig,
-  //   safetySettings: safetySettings,
-  // );
-  // return response;
+      GenerationConfig? generationConfig}) async {
+    throw UnimplementedError(
+        'Unimplemented method. This feature will be added in the newer versions');
+    //   final response = await api.postStream(
+    //   "${modelName ?? Constants.defaultModel}:streamGenerateContent",
+    //   data: {
+    //     'contents': [
+    //       {
+    //         "parts": [
+    //           {"text": text},
+    //         ]
+    //       }
+    //     ]
+    //   },
+    //   generationConfig: generationConfig,
+    //   safetySettings: safetySettings,
+    // );
+    // return response;
   }
 
   @override
@@ -171,8 +169,12 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future batchEmbedContents(List<String> texts, {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
-    throw UnimplementedError('Unimplemented method. This feature will be added in the newer versions');
+  Future batchEmbedContents(List<String> texts,
+      {String? modelName,
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig}) async {
+    throw UnimplementedError(
+        'Unimplemented method. This feature will be added in the newer versions');
     // final response = await api.post(
     //   "${modelName ?? 'models/embedding-001'}:batchEmbedContents",
     //   data: {
@@ -194,8 +196,12 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future embedContents(String text, {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
-    throw UnimplementedError('Unimplemented method. This feature will be added in the newer versions');
+  Future embedContents(String text,
+      {String? modelName,
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig}) async {
+    throw UnimplementedError(
+        'Unimplemented method. This feature will be added in the newer versions');
     // final response = await api.post(
     //   "${modelName ?? 'models/embedding-001'}:embedContent",
     //   data: {
