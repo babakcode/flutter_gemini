@@ -5,7 +5,6 @@ import '../prompt_feedback/prompt_feedback.dart';
 part 'gemini_response.freezed.dart';
 part 'gemini_response.g.dart';
 
-
 /// [GeminiResponse] is the value in the response of request
 @unfreezed
 class GeminiResponse with _$GeminiResponse {

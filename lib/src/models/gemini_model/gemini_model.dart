@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'gemini_model.freezed.dart';
 part 'gemini_model.g.dart';
 
-
 /// [GeminiModel] is the AI model and declares AI options
 @unfreezed
 class GeminiModel with _$GeminiModel {

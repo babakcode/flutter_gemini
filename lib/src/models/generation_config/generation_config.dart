@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'generation_config.freezed.dart';
 part 'generation_config.g.dart';
 
-
 /// [GenerationConfig] is uses when we want to declare response types
 @unfreezed
 class GenerationConfig with _$GenerationConfig {

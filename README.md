@@ -59,8 +59,15 @@ This feature lets you perform natural language processing (NLP) tasks such as te
 
 If the input contains both text and image, You can send a text prompt with an image to the gemini-pro-vision model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
 
-```dart
-// In progress
+```dart    
+    final file = File('assets/img.png');
+    gemini
+        .textAndImageInput(
+          text: "What is this picture?",
+          image: file.readAsBytesSync(),
+        )
+        .then((value) => log(value?.content?.parts?.last.text ?? ''))
+        .catchError((e) => log('textAndImageInput exception', error: e));
 ```
 
 

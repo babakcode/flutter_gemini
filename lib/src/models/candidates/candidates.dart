@@ -5,7 +5,6 @@ import '../safety_ratings/safety_ratings.dart';
 part 'candidates.freezed.dart';
 part 'candidates.g.dart';
 
-
 /// [Candidates] is the value in request response
 @unfreezed
 class Candidates with _$Candidates {

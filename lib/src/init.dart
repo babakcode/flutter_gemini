@@ -17,7 +17,6 @@ import 'models/gemini_safety/gemini_safety.dart';
 ///   implements [GeminiInterface]
 ///   and [GeminiInterface] defines all methods of Gemini
 class Gemini implements GeminiInterface {
-
   /// [enableDebugging]
   /// to see request progress
   static bool enableDebugging = false;
@@ -26,6 +25,7 @@ class Gemini implements GeminiInterface {
   Gemini._({
     /// [apiKey] is required property
     required String apiKey,
+
     /// theses properties are optional
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
@@ -64,7 +64,6 @@ class Gemini implements GeminiInterface {
     }
     return instance;
   }
-
 
   /// [chat] or `Multi-turn conversations`
   /// Using Gemini, you can build freeform conversations across multiple turns.
@@ -139,14 +138,18 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
-  /// [textAndImageInput] If the input contains both text and image, use
+  /// [textAndImage] If the input contains both text and image, use
   /// the `gemini-pro-vision` model. The following snippets help you build a request and send it to the REST API.
   @override
-  Future textAndImageInput(String text, Uint8List image,
-          {String? modelName,
+  Future<Candidates?> textAndImage(
+          {required String text,
+          required Uint8List image,
+          String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
-      _impl.textAndImageInput(text, image,
+      _impl.textAndImage(
+          text: text,
+          image: image,
           generationConfig: generationConfig,
           safetySettings: safetySettings,
           modelName: modelName);

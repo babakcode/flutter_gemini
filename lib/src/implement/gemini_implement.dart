@@ -79,18 +79,25 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future textAndImageInput(String text, Uint8List image,
-      {String? modelName,
+  Future<Candidates?> textAndImage(
+      {required String text,
+      required Uint8List image,
+      String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-    base64Encode(image);
     final response = await api.post(
-      "${modelName ?? 'Constants.defaultModel'}:${Constants.defaultGenerateType}",
+      "${modelName ?? 'models/gemini-pro-vision'}:${Constants.defaultGenerateType}",
       data: {
         'contents': [
           {
             "parts": [
-              {"text": text}
+              {"text": text},
+              {
+                "inline_data": {
+                  "mime_type": "image/jpeg",
+                  "data": base64Encode(image)
+                }
+              }
             ]
           }
         ]
@@ -98,7 +105,7 @@ class GeminiImpl implements GeminiInterface {
       generationConfig: generationConfig,
       safetySettings: safetySettings,
     );
-
+    return GeminiResponse.fromJson(response.data).candidates?.last;
   }
 
   @override

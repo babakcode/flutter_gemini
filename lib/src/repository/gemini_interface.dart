@@ -73,11 +73,11 @@ abstract class GeminiInterface {
     GenerationConfig? generationConfig,
   });
 
-  /// [textAndImageInput] If the input contains both text and image, use
+  /// [textAndImage] If the input contains both text and image, use
   /// the `gemini-pro-vision` model. The following snippets help you build a request and send it to the REST API.
-  Future textAndImageInput(
-    String text,
-    Uint8List image, {
+  Future<Candidates?> textAndImage({
+    required String text,
+    required Uint8List image,
     String? modelName,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
