@@ -2,7 +2,7 @@
 
 Google Gemini is a set of cutting-edge large language models (LLMs) designed to be the driving force behind Google's future AI initiatives.
 
-![gemini_cover](https://github.com/babakcode/flutter_gemini/assets/31356659/fa9f3db3-dd05-45c7-bce2-ea8ea9a0a565)
+![gemini_github_cover](https://github.com/babakcode/flutter_gemini/assets/31356659/c630f6b1-681c-47be-a0d9-dc402258e5ff)
 
 This package provides a powerful bridge between your Flutter application and Google's revolutionary Gemini AI. It empowers you to seamlessly integrate Gemini's capabilities into your app, unlocking possibilities for building innovative, intelligent, and engaging experiences that redefine user interaction.
 
