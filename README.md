@@ -8,10 +8,6 @@ This package provides a powerful bridge between your Flutter application and Goo
 
 ## Features
 
-1. [o] Set up your API key [scroll](#getting-started)
-2. [o] Initialize gemini [scroll](#initialize-gemini)
-3. 
-
 - Set up your API key [scroll](#getting-started)
 - Initialize gemini [scroll](#initialize-gemini)
 - Content-based APIs [scroll](#content-based-apis)
