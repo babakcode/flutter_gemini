@@ -1,21 +1,17 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
-
 import 'config/constants.dart';
 import 'implement/gemini_service.dart';
 import 'models/embedding/embedding_input_type.dart';
 import 'models/gemini_model/gemini_model.dart';
-import 'models/gemini_response/gemini_response.dart';
 import 'models/generation_config/generation_config.dart';
 import 'repository/gemini_interface.dart';
 import 'package:dio/dio.dart';
-
 import 'implement/gemini_implement.dart';
 import 'models/gemini_safety/gemini_safety.dart';
 
 class Gemini implements GeminiInterface {
-
   /// to see request progress
   static bool enableDebugging = false;
 
@@ -41,13 +37,12 @@ class Gemini implements GeminiInterface {
   GeminiImpl _impl;
 
   /// singleton initialize
-  factory Gemini.init({
-    required String apiKey,
-    List<SafetySetting>? safetySettings,
-    GenerationConfig? generationConfig,
-    bool? enableDebugging
-  }) {
-    if(enableDebugging != null){
+  factory Gemini.init(
+      {required String apiKey,
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig,
+      bool? enableDebugging}) {
+    if (enableDebugging != null) {
       Gemini.enableDebugging = enableDebugging;
     }
     if (_firstInit) {

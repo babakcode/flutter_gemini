@@ -10,8 +10,8 @@ class GeminiService {
   final Dio dio;
   final String apiKey;
 
-  GeminiService(this.dio, {required this.apiKey}){
-    if(!kReleaseMode && Gemini.enableDebugging){
+  GeminiService(this.dio, {required this.apiKey}) {
+    if (!kReleaseMode && Gemini.enableDebugging) {
       dio.interceptors
           .add(LogInterceptor(requestBody: true, responseBody: true));
     }
@@ -22,7 +22,7 @@ class GeminiService {
 
   Future<Response> post(
     String route, {
-       required Map<String, Object>? data,
+    required Map<String, Object>? data,
     GenerationConfig? generationConfig,
     List<SafetySetting>? safetySettings,
   }) async {

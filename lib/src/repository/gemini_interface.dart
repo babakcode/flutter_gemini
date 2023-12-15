@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
-
 import '../models/embedding/embedding_input_type.dart';
 import '../models/gemini_model/gemini_model.dart';
-import '../models/gemini_response/gemini_response.dart';
 import '../models/gemini_safety/gemini_safety.dart';
 import '../models/generation_config/generation_config.dart';
 
