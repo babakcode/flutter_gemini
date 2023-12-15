@@ -3,9 +3,10 @@ import '../models/gemini_model/gemini_model.dart';
 class Constants {
   Constants._();
   static const String defaultModel = 'models/gemini-pro';
+  static const String defaultVersion = 'v1beta';
   static const String defaultGenerateType = 'generateContent';
   static const String baseUrl =
-      'https://generativelanguage.googleapis.com/v1beta/';
+      'https://generativelanguage.googleapis.com/';
 
   static List<GeminiModel> get geminiDefaultModels => [
         {

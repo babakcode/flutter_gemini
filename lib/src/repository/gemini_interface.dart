@@ -1,19 +1,17 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
-import '../models/embedding/embedding_input_type.dart';
-import '../models/gemini_model/gemini_model.dart';
-import '../models/gemini_safety/gemini_safety.dart';
+import '../../flutter_gemini.dart';
 import '../models/generation_config/generation_config.dart';
 
 abstract class GeminiInterface {
   /// [listModels]
-  /// If you `GET` the `models` directory, it uses the `list` method to list
+  /// If you `GET` the `models` directory, it used the `list` method to list
   /// all of the models available through the API, including both the Gemini and PaLM family models.
   Future<List<GeminiModel>> listModels();
 
   /// [info]
-  /// If you `GET` a model's URL, the API uses the `get` method to return
+  /// If you `GET` a model's URL, the API used the `get` method to return
   /// information about that model such as version, display name, input token limit, etc.
   Future<GeminiModel> info({required String model});
 
@@ -27,7 +25,7 @@ abstract class GeminiInterface {
     GenerationConfig? generationConfig,
   });
 
-  /// [embedding] is a technique used to represent information as a
+  /// [Embedding] is a technique used to represent information as a
   /// list of floating point numbers in an array.
   /// With Gemini, you can represent text (words, sentences, and blocks of text)
   /// in a vectorized form, making it easier to compare and contrast embeddings.
@@ -35,10 +33,16 @@ abstract class GeminiInterface {
   /// should have similar embeddings, which can be identified through mathematical
   /// comparison techniques such as cosine similarity.
   ///
-  /// Use the `embedding-001` model with either `embedContents` or `batchEmbedContents`:
-  Future embedding(
+  /// Use the `embedding-001` model with either [embedContents] or [batchEmbedContents]
+  Future batchEmbedContents(
+    List<String> texts, {
+    String? modelName,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  });
+  /// [embedContents] description in upper comments
+  Future embedContents(
     String text, {
-    EmbeddingInputType type = EmbeddingInputType.batchEmbedContents,
     String? modelName,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
@@ -46,7 +50,7 @@ abstract class GeminiInterface {
 
   /// [countTokens] When using long prompts, it might be useful to count tokens
   /// before sending any content to the model.
-  Future countTokens(
+  Future<int?> countTokens(
     String text, {
     String? modelName,
     List<SafetySetting>? safetySettings,
@@ -57,7 +61,7 @@ abstract class GeminiInterface {
   /// completing the entire generation process.
   /// You can achieve faster interactions by not waiting
   /// for the entire result, and instead use streaming to handle partial results.
-  Stream streamGenerateContent(
+  Future<Stream> streamGenerateContent(
     String text, {
     String? modelName,
     List<SafetySetting>? safetySettings,
@@ -66,8 +70,8 @@ abstract class GeminiInterface {
 
   /// [chat] or `Multi-turn conversations`
   /// Using Gemini, you can build freeform conversations across multiple turns.
-  Future chat(
-    List<String> chats, {
+  Future<Candidates?> chat(
+    List<Content> chats, {
     String? modelName,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,

@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 import 'config/constants.dart';
 import 'implement/gemini_service.dart';
-import 'models/embedding/embedding_input_type.dart';
+import 'models/content/content.dart';
 import 'models/gemini_model/gemini_model.dart';
 import 'models/generation_config/generation_config.dart';
 import 'repository/gemini_interface.dart';
@@ -22,17 +22,22 @@ class Gemini implements GeminiInterface {
   static bool enableDebugging = false;
 
   /// private constructor [Gemini._]
-  Gemini._({
-    /// [apiKey] is required property
-    required String apiKey,
+  Gemini._(
+      {
+      /// [apiKey] is required property
+      required String apiKey,
 
-    /// theses properties are optional
-    List<SafetySetting>? safetySettings,
-    GenerationConfig? generationConfig,
-  }) : _impl = GeminiImpl(
+      /// theses properties are optional
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig,
+      String? version})
+      : _impl = GeminiImpl(
           api: GeminiService(
               Dio(BaseOptions(
-                  baseUrl: Constants.baseUrl, contentType: 'application/json')),
+                  baseUrl:
+                      '${Constants.baseUrl}${version ?? Constants.defaultVersion}/',
+                  contentType: 'application/json',
+                  headers: {'Access-Control-Allow-Origin': '*'})),
               apiKey: apiKey),
           safetySettings: safetySettings,
           generationConfig: generationConfig,
@@ -51,7 +56,8 @@ class Gemini implements GeminiInterface {
       {required String apiKey,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
-      bool? enableDebugging}) {
+      bool? enableDebugging,
+      String? version}) {
     if (enableDebugging != null) {
       Gemini.enableDebugging = enableDebugging;
     }
@@ -60,7 +66,8 @@ class Gemini implements GeminiInterface {
       instance = Gemini._(
           apiKey: apiKey,
           safetySettings: safetySettings,
-          generationConfig: generationConfig);
+          generationConfig: generationConfig,
+          version: version);
     }
     return instance;
   }
@@ -69,7 +76,7 @@ class Gemini implements GeminiInterface {
   /// Using Gemini, you can build freeform conversations across multiple turns.
   /// * not implemented yet
   @override
-  Future chat(List<String> chats,
+  Future<Candidates?> chat(List<Content> chats,
           {String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
@@ -82,7 +89,7 @@ class Gemini implements GeminiInterface {
   /// before sending any content to the model.
   /// * not implemented yet
   @override
-  Future countTokens(String text,
+  Future<int?> countTokens(String text,
           {String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
@@ -91,35 +98,14 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
-  /// [embedding] is a technique used to represent information as a
-  /// list of floating point numbers in an array.
-  /// With Gemini, you can represent text (words, sentences, and blocks of text)
-  /// in a vectorized form, making it easier to compare and contrast embeddings.
-  /// For example, two texts that share a similar subject matter or sentiment
-  /// should have similar embeddings, which can be identified through mathematical
-  /// comparison techniques such as cosine similarity.
-  ///
-  /// Use the `embedding-001` model with either `embedContents` or `batchEmbedContents`:
-  @override
-  Future embedding(String text,
-          {EmbeddingInputType type = EmbeddingInputType.batchEmbedContents,
-          String? modelName,
-          List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig}) =>
-      _impl.embedding(text,
-          generationConfig: generationConfig,
-          safetySettings: safetySettings,
-          modelName: modelName,
-          type: type);
-
   /// [info]
-  /// If you `GET` a model's URL, the API uses the `get` method to return
+  /// If you `GET` a model's URL, the API used the `get` method to return
   /// information about that model such as version, display name, input token limit, etc.
   @override
   Future<GeminiModel> info({required String model}) => _impl.info(model: model);
 
   /// [listModels]
-  /// If you `GET` the `models` directory, it uses the `list` method to list
+  /// If you `GET` the `models` directory, it used the `list` method to list
   /// all of the models available through the API, including both the Gemini and PaLM family models.
   @override
   Future<List<GeminiModel>> listModels() => _impl.listModels();
@@ -129,7 +115,7 @@ class Gemini implements GeminiInterface {
   /// You can achieve faster interactions by not waiting
   /// for the entire result, and instead use streaming to handle partial results.
   @override
-  Stream streamGenerateContent(String text,
+  Future<Stream> streamGenerateContent(String text,
           {String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
@@ -165,5 +151,34 @@ class Gemini implements GeminiInterface {
       _impl.text(text,
           generationConfig: generationConfig,
           safetySettings: safetySettings,
+          modelName: modelName);
+
+  /// [Embedding] is a technique used to represent information as a
+  /// list of floating point numbers in an array.
+  /// With Gemini, you can represent text (words, sentences, and blocks of text)
+  /// in a vectorized form, making it easier to compare and contrast embeddings.
+  /// For example, two texts that share a similar subject matter or sentiment
+  /// should have similar embeddings, which can be identified through mathematical
+  /// comparison techniques such as cosine similarity.
+  ///
+  /// Use the `embedding-001` model with either [embedContents] or [batchEmbedContents]
+  @override
+  Future batchEmbedContents(List<String> texts,
+          {String? modelName,
+          List<SafetySetting>? safetySettings,
+          GenerationConfig? generationConfig}) =>
+      _impl.batchEmbedContents(texts,
+          safetySettings: safetySettings,
+          generationConfig: generationConfig,
+          modelName: modelName);
+
+  @override
+  Future embedContents(String text,
+          {String? modelName,
+          List<SafetySetting>? safetySettings,
+          GenerationConfig? generationConfig}) =>
+      _impl.embedContents(text,
+          safetySettings: safetySettings,
+          generationConfig: generationConfig,
           modelName: modelName);
 }

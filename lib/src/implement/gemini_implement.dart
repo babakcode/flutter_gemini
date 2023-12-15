@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
+import 'package:flutter_gemini/src/models/content/content.dart';
+import 'package:flutter_gemini/src/models/parts/parts.dart';
 
 import '../config/constants.dart';
-import '../models/embedding/embedding_input_type.dart';
 import '../models/gemini_model/gemini_model.dart';
 import '../models/gemini_response/gemini_response.dart';
 import '../models/gemini_safety/gemini_safety.dart';
@@ -30,52 +31,90 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future chat(List<String> chats,
+  Future<Candidates?> chat(List<Content> chats,
       {String? modelName,
       List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) {
-    // TODO: implement chat
-    throw UnimplementedError();
+      GenerationConfig? generationConfig}) async {
+    final response = await api.post(
+      "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
+      data: {
+        'contents': chats.map((e) => e.toJson()).toList()
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+
+    return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
   }
 
   @override
-  Future countTokens(String text,
+  Future<int?> countTokens(String text,
       {String? modelName,
       List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) {
-    // TODO: implement countTokens
-    throw UnimplementedError();
+      GenerationConfig? generationConfig}) async {
+    try{
+      final response = await api.post(
+        "${modelName ?? Constants.defaultModel}:countTokens",
+        data: {
+          'contents': [
+            {
+              "parts": [
+                {"text": text},
+              ]
+            }
+          ]
+        },
+        generationConfig: generationConfig,
+        safetySettings: safetySettings,
+      );
+      return response.data?['totalTokens'];
+    }catch(e) {
+      rethrow;
+    }
+  }
+
+
+  @override
+  Future<GeminiModel> info({required String model}) async {
+    try{
+      final response = await api.get('models/$model');
+      return GeminiModel.fromJson(response.data);
+    }catch(e) {
+      rethrow;
+    }
   }
 
   @override
-  Future embedding(String text,
-      {EmbeddingInputType type = EmbeddingInputType.batchEmbedContents,
-      String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) {
-    // TODO: implement embedding
-    throw UnimplementedError();
+  Future<List<GeminiModel>> listModels() async {
+    try{
+      final response = await api.get('models');
+      return GeminiModel.jsonToList(response.data['models']);
+    }catch(e) {
+      rethrow;
+    }
   }
 
   @override
-  Future<GeminiModel> info({required String model}) {
-    // TODO: implement info
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<GeminiModel>> listModels() {
-    // TODO: implement listModels
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream streamGenerateContent(String text,
+  Future<Stream> streamGenerateContent(String text,
       {String? modelName,
       List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) {
-    // TODO: implement streamGenerateContent
-    throw UnimplementedError();
+      GenerationConfig? generationConfig})async {
+    throw UnimplementedError('Unimplemented method. This feature will be added in the newer versions');
+  //   final response = await api.postStream(
+  //   "${modelName ?? Constants.defaultModel}:streamGenerateContent",
+  //   data: {
+  //     'contents': [
+  //       {
+  //         "parts": [
+  //           {"text": text},
+  //         ]
+  //       }
+  //     ]
+  //   },
+  //   generationConfig: generationConfig,
+  //   safetySettings: safetySettings,
+  // );
+  // return response;
   }
 
   @override
@@ -105,7 +144,7 @@ class GeminiImpl implements GeminiInterface {
       generationConfig: generationConfig,
       safetySettings: safetySettings,
     );
-    return GeminiResponse.fromJson(response.data).candidates?.last;
+    return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
   }
 
   @override
@@ -128,6 +167,50 @@ class GeminiImpl implements GeminiInterface {
       safetySettings: safetySettings,
     );
 
-    return GeminiResponse.fromJson(response.data).candidates?.last;
+    return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+  }
+
+  @override
+  Future batchEmbedContents(List<String> texts, {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
+    throw UnimplementedError('Unimplemented method. This feature will be added in the newer versions');
+    // final response = await api.post(
+    //   "${modelName ?? 'models/embedding-001'}:batchEmbedContents",
+    //   data: {
+    //     'requests': texts.map((e) => {
+    //       'model': 'models/embedding-001',
+    //       'content': [
+    //         {
+    //           'parts': [
+    //             {'text': e},
+    //           ]
+    //         }
+    //       ]
+    //     }).toList(),
+    //   },
+    //   generationConfig: generationConfig,
+    //   safetySettings: safetySettings,
+    // );
+    // return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+  }
+
+  @override
+  Future embedContents(String text, {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
+    throw UnimplementedError('Unimplemented method. This feature will be added in the newer versions');
+    // final response = await api.post(
+    //   "${modelName ?? 'models/embedding-001'}:embedContent",
+    //   data: {
+    //     'model': 'models/embedding-001',
+    //     'contents': [
+    //       {
+    //         'parts': [
+    //           {'text': text},
+    //         ]
+    //       }
+    //     ]
+    //   },
+    //   generationConfig: generationConfig,
+    //   safetySettings: safetySettings,
+    // );
+    // return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
   }
 }

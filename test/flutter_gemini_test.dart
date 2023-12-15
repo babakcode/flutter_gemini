@@ -1,30 +1,33 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
+const apiKey = '--- Your Gemini Api Key ---';
+
 void main() {
   Gemini.init(
-      apiKey: '--- Your Gemini Api Key ---', enableDebugging: true);
+      apiKey: apiKey, enableDebugging: true);
 
   test('check gemini to generate simple text', () async {
     /// an instance
     final gemini = Gemini.instance;
 
-    /// text
     await gemini
-        .text("Write a story about a magic backpack.")
-        .then((value) => log(value?.content?.parts?.last.text ?? ''))
-        .catchError((e) => log('text input exception', error: e));
-
-    /// text and image
-    final file = File('assets/img.png');
-    await gemini
-        .textAndImage(
-          text: "What is this picture?",
-          image: file.readAsBytesSync(),
-        )
-        .then((value) => log(value?.content?.parts?.last.text ?? ''))
-        .catchError((e) => log('textAndImageInput exception', error: e));
+        .chat([
+          Content(parts: [
+            Parts(
+                text: 'Write the first line of a story about a magic backpack.')
+          ], role: 'user'),
+          Content(parts: [
+            Parts(
+                text:
+                    'In the bustling city of Meadow brook, lived a young girl named Sophie. She was a bright and curious soul with an imaginative mind.')
+          ], role: 'model'),
+          Content(parts: [
+            Parts(text: 'Can you set it in a quiet village in 1600s France?')
+          ], role: 'user'),
+        ])
+        .then((value) => log(value?.output ?? 'without output'))
+        .catchError((e) => log('chat', error: e));
   });
 }
