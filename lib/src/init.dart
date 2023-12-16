@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 import 'config/constants.dart';
@@ -10,6 +11,15 @@ import 'repository/gemini_interface.dart';
 import 'package:dio/dio.dart';
 import 'implement/gemini_implement.dart';
 import 'models/gemini_safety/gemini_safety.dart';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 /// [Gemini]
 /// Flutter Google Gemini SDK. Google Gemini is a set of cutting-edge large language models
@@ -34,14 +44,16 @@ class Gemini implements GeminiInterface {
       : _impl = GeminiImpl(
           api: GeminiService(
               Dio(BaseOptions(
-                  baseUrl:
-                      '${Constants.baseUrl}${version ?? Constants.defaultVersion}/',
-                  contentType: 'application/json',
-                  headers: {'Access-Control-Allow-Origin': '*'})),
+                baseUrl:
+                    '${Constants.baseUrl}${version ?? Constants.defaultVersion}/',
+                contentType: 'application/json',
+              )),
               apiKey: apiKey),
           safetySettings: safetySettings,
           generationConfig: generationConfig,
-        );
+        ) {
+    HttpOverrides.global = MyHttpOverrides();
+  }
 
   /// singleton [instance] from main [Gemini] class
   static late Gemini instance;

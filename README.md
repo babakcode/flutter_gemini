@@ -23,9 +23,14 @@ This package provides a powerful bridge between your Flutter application and Goo
 
 To use the Gemini API, you'll need an API key. If you don't already have one, create a key in Google AI Studio. [Get an API key](https://ai.google.dev/).
 
+### online demo
+
+[https://babakcode.github.io/flutter_gemini](https://babakcode.github.io/flutter_gemini)
+
 ## Initialize Gemini
 
-To initialize Gemini you must add an init factory in the main function.
+For initialization, you must call the init constructor for Flutter Gemini in the main function.
+
 ```dart
 void main() {
 
@@ -38,10 +43,6 @@ void main() {
 
 Now you can create an instance
 
-```dart
-final gemini = Gemini.instance;
-```
-
 ## Content-based APIs
 
 ### Text-only input
@@ -49,12 +50,14 @@ final gemini = Gemini.instance;
 This feature lets you perform natural language processing (NLP) tasks such as text completion and summarization.
 
 ```dart
-  final gemini = Gemini.instance;
+final gemini = Gemini.instance;
 
-  gemini.text("Write a story about a magic backpack.")
-    .then((value) => print( value?.output )) /// or value?.content?.parts?.last.text
-    .catchError((e) => print(e));
+gemini.text("Write a story about a magic backpack.")
+  .then((value) => print( value?.output )) /// or value?.content?.parts?.last.text
+  .catchError((e) => print(e));
 ```
+
+![Flutter gemini Text only example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*41dnttHItU2v4hobJ_DGSA.gif "Flutter_Gemini example")
 
 ### Text-and-image input
 
@@ -71,6 +74,8 @@ If the input contains both text and image, You can send a text prompt with an im
       .then((value) => log(value?.content?.parts?.last.text ?? ''))
       .catchError((e) => log('textAndImageInput', error: e));
 ```
+
+![Flutter gemini Text and Image example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*3JEeJaBRSpif6hOl2pt3RA.gif "Flutter_Gemini example")
 
 
 ### Multi-turn conversations (chat)
@@ -94,6 +99,9 @@ Using Gemini, you can build freeform conversations across multiple turns.
         .then((value) => log(value?.output ?? 'without output'))
         .catchError((e) => log('chat', error: e));
 ```
+
+
+![Flutter gemini Text and Image example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*MoVz4Z5KpxVUocEHLmzDew.gif "Flutter_Gemini example")
 
 
 ### Count tokens
