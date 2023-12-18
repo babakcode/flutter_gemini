@@ -1,7 +1,7 @@
 name: flutter_gemini
 description: Flutter Google Gemini SDK. Google Gemini is a set of cutting-edge large language models 
   (LLMs) designed to be the driving force behind Google's future AI initiatives.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/babakcode/flutter_gemini
 topics:
   - gemini
@@ -9,8 +9,18 @@ topics:
   - google-gemini
   - flutter-gemini
 screenshots:
+  - description: Flutter_Gemini example screenshot
+    path: example/screenshots/gemini_cover_2.jpg
   - description: Flutter_Gemini example
     path: example/screenshots/gemini_cover.jpeg
+
+platforms:
+  android:
+  ios:
+  web:
+  linux:
+  windows:
+  macos:
 
 environment:
   sdk: '>=3.1.3 <4.0.0'
@@ -68,3 +78,5 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true
