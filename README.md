@@ -11,7 +11,7 @@ This package provides a powerful bridge between your Flutter application and Goo
 - Set up your API key [scroll](#getting-started)
 - Initialize Gemini [scroll](#initialize-gemini)
 - Content-based APIs [scroll](#content-based-apis)
-  - Stream generates content [scroll](#stream-generates-content)
+  - Stream Generate Content [scroll](#stream-generate-content)
   - Text-only input [scroll](#text-only-input)
   - Text-and-image input [scroll](#text-and-image-input)
   - Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
@@ -48,9 +48,9 @@ Now you can create an instance
 
 ## Content-based APIs
 
-#### Stream generates content
+#### Stream Generate Content
 
-The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt to not wait for the complete result and, instead, use streaming to manage partial results.
+The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt not to wait for the complete result and instead use streaming to manage partial results.
 
 ```dart
 final gemini = Gemini.instance;
