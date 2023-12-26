@@ -11,16 +11,16 @@ This package provides a powerful bridge between your Flutter application and Goo
 - Set up your API key [scroll](#getting-started)
 - Initialize gemini [scroll](#initialize-gemini)
 - Content-based APIs [scroll](#content-based-apis)
-    - Stream generate content [scroll](#stream-generate-content)
-    - Text-only input [scroll](#text-only-input)
-    - Text-and-image input [scroll](#text-and-image-input)
-    - Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
-    - Count tokens [scroll](#count-tokens)
-    - Model info [scroll](#model-info)
-    - List models [scroll](#list-models)
-    - EmbedContents and batchEmbedContents [scroll](#embedcontents-and-batchembedcontents)
-- [Flutter Gemini widgets](#flutter-gemini-widgets)
-    - 
+  - Stream generate content [scroll](#stream-generate-content)
+  - Text-only input [scroll](#text-only-input)
+  - Text-and-image input [scroll](#text-and-image-input)
+  - Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
+  - Count tokens [scroll](#count-tokens)
+  - Model info [scroll](#model-info)
+  - List models [scroll](#list-models)
+  - EmbedContents and batchEmbedContents [scroll](#embedcontents-and-batchembedcontents)
+- Flutter Gemini widgets [scroll](#flutter-gemini-widgets)
+    
 
 ## Getting started
 
