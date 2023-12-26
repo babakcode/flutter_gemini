@@ -1,6 +1,6 @@
-## 2.0.0
+## 2.0.0-dev-1
 
-* ## Add new features
+* ## Add new crucial features
 * ##### streamGenerateContent
 * The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt not to wait for the complete result and instead use streaming to manage partial results.
 * ##### batchEmbedContents
