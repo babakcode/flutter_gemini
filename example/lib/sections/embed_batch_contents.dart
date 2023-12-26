@@ -7,13 +7,15 @@ class SectionBatchEmbedContents extends StatefulWidget {
   const SectionBatchEmbedContents({super.key});
 
   @override
-  State<SectionBatchEmbedContents> createState() => _SectionTextInputStreamState();
+  State<SectionBatchEmbedContents> createState() =>
+      _SectionTextInputStreamState();
 }
 
 class _SectionTextInputStreamState extends State<SectionBatchEmbedContents> {
   final controller = TextEditingController();
   final gemini = Gemini.instance;
-  String? searchedText; List<List<num>?>? result;
+  String? searchedText;
+  List<List<num>?>? result;
   bool _loading = false;
 
   bool get loading => _loading;
@@ -38,12 +40,12 @@ class _SectionTextInputStreamState extends State<SectionBatchEmbedContents> {
             child: loading
                 ? Lottie.asset('assets/lottie/ai.json')
                 : result != null
-                ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(child: Text(result?.toString() ?? '')),
-            )
-                : const Center(child: Text('Search something!'))),
-
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleChildScrollView(
+                            child: Text(result?.toString() ?? '')),
+                      )
+                    : const Center(child: Text('Search something!'))),
         ChatInputBox(
           controller: controller,
           onSend: () {
@@ -63,4 +65,3 @@ class _SectionTextInputStreamState extends State<SectionBatchEmbedContents> {
     );
   }
 }
-

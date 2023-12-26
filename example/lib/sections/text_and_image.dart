@@ -53,14 +53,14 @@ class _SectionTextAndImageInputState extends State<SectionTextAndImageInput> {
                   child: loading
                       ? Lottie.asset('assets/lottie/ai.json')
                       : result != null
-                      ? Markdown(
-                    data: result!,
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 12),
-                  )
-                      : const Center(
-                    child: Text('Search something!'),
-                  ),
+                          ? Markdown(
+                              data: result!,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                            )
+                          : const Center(
+                              child: Text('Search something!'),
+                            ),
                 ),
                 if (selectedImage != null)
                   Expanded(
@@ -79,15 +79,15 @@ class _SectionTextAndImageInputState extends State<SectionTextAndImageInput> {
         ),
         ChatInputBox(
           controller: controller,
-          onClickCamera: () async{
+          onClickCamera: () async {
             // Capture a photo.
             final XFile? photo =
                 await picker.pickImage(source: ImageSource.camera);
 
             if (photo != null) {
               photo.readAsBytes().then((value) => setState(() {
-                selectedImage = value;
-              }));
+                    selectedImage = value;
+                  }));
             }
           },
           onSend: () {
@@ -96,10 +96,8 @@ class _SectionTextAndImageInputState extends State<SectionTextAndImageInput> {
               controller.clear();
               loading = true;
 
-              gemini
-                  .textAndImage(
-                  text: searchedText!, images: [selectedImage!])
-                  .then((value) {
+              gemini.textAndImage(
+                  text: searchedText!, images: [selectedImage!]).then((value) {
                 result = value?.content?.parts?.last.text;
                 loading = false;
               });

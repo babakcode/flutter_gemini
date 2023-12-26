@@ -39,11 +39,11 @@ class _SectionTextInputState extends State<SectionTextInput> {
             child: loading
                 ? Lottie.asset('assets/lottie/ai.json')
                 : result != null
-                ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Markdown(data: result!),
-            )
-                : const Center(child: Text('Search something!'))),
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Markdown(data: result!),
+                      )
+                    : const Center(child: Text('Search something!'))),
         ChatInputBox(
           controller: controller,
           onSend: () {

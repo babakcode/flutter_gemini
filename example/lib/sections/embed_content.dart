@@ -13,7 +13,8 @@ class SectionEmbedContent extends StatefulWidget {
 class _SectionEmbedContentState extends State<SectionEmbedContent> {
   final controller = TextEditingController();
   final gemini = Gemini.instance;
-  String? searchedText; List<num>? result;
+  String? searchedText;
+  List<num>? result;
   bool _loading = false;
 
   bool get loading => _loading;
@@ -38,11 +39,12 @@ class _SectionEmbedContentState extends State<SectionEmbedContent> {
             child: loading
                 ? Lottie.asset('assets/lottie/ai.json')
                 : result != null
-                ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(child: Text(result?.toString() ?? '')),
-            )
-                : const Center(child: Text('Search something!'))),
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleChildScrollView(
+                            child: Text(result?.toString() ?? '')),
+                      )
+                    : const Center(child: Text('Search something!'))),
         ChatInputBox(
           controller: controller,
           onSend: () {

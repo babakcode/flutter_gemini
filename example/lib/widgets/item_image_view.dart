@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class ItemImageView extends StatelessWidget {
-
   final Uint8List bytes;
   const ItemImageView({super.key, required this.bytes});
 

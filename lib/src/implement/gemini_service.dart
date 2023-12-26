@@ -25,7 +25,7 @@ class GeminiService {
     required Map<String, Object>? data,
     GenerationConfig? generationConfig,
     List<SafetySetting>? safetySettings,
-        bool isStreamResponse = false,
+    bool isStreamResponse = false,
   }) async {
     /// add local safetySettings or global safetySetting which added
     /// in [init] constructor
@@ -62,5 +62,4 @@ class GeminiService {
       queryParameters: {'key': apiKey},
     );
   }
-
 }

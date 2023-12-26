@@ -57,7 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
     SectionItem(3, 'text', const SectionTextInput()),
     SectionItem(4, 'embedContent', const SectionEmbedContent()),
     SectionItem(5, 'batchEmbedContents', const SectionBatchEmbedContents()),
-    SectionItem(6, 'response without setState()', const ResponseWidgetSection()),
+    SectionItem(
+        6, 'response without setState()', const ResponseWidgetSection()),
   ];
 
   @override
@@ -65,7 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(_selectedItem == 0 ? 'Flutter Gemini': _sections[_selectedItem].title),
+        title: Text(_selectedItem == 0
+            ? 'Flutter Gemini'
+            : _sections[_selectedItem].title),
         actions: [
           PopupMenuButton<int>(
             initialValue: _selectedItem,

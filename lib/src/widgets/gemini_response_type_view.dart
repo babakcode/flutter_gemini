@@ -19,7 +19,6 @@ class GeminiResponseTypeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Align(
       alignment: Alignment.bottomCenter,
       child: ListenableBuilder(

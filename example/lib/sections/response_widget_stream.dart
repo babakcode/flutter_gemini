@@ -26,7 +26,6 @@ class _SectionTextInputStreamState extends State<ResponseWidgetSection> {
     }
   }
 
-
   set loading(bool set) {
     if (set != loading) {
       setState(() => _loading = set);
@@ -55,9 +54,7 @@ class _SectionTextInputStreamState extends State<ResponseWidgetSection> {
                         builder: (context, child, response, loading) =>
                             Markdown(data: response ?? ''))
                     : const Center(child: Text('Search something!'))),
-        if(finishReason != null)
-          Text(finishReason!),
-
+        if (finishReason != null) Text(finishReason!),
         ChatInputBox(
           controller: controller,
           onSend: () {
@@ -70,16 +67,16 @@ class _SectionTextInputStreamState extends State<ResponseWidgetSection> {
 
               gemini
                   .streamGenerateContent(searchedText!,
-                  generationConfig: GenerationConfig(
-                    maxOutputTokens: 2000,
-                    temperature: 0.9,
-                    topP: 0.1,
-                    topK: 16,
-                  ))
+                      generationConfig: GenerationConfig(
+                        maxOutputTokens: 2000,
+                        temperature: 0.9,
+                        topP: 0.1,
+                        topK: 16,
+                      ))
                   .listen((value) {
                 result = (result ?? '') + (value.output ?? '');
 
-                if(value.finishReason != 'STOP'){
+                if (value.finishReason != 'STOP') {
                   finishReason = 'Finish reason is `RECITATION`';
                 }
                 loading = false;

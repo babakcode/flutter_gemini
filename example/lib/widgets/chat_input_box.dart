@@ -31,7 +31,7 @@ class ChatInputBox extends StatelessWidget {
             controller: controller,
             minLines: 1,
             maxLines: 6,
-            cursorColor:  Theme.of(context).colorScheme.inversePrimary,
+            cursorColor: Theme.of(context).colorScheme.inversePrimary,
             textInputAction: TextInputAction.newline,
             keyboardType: TextInputType.multiline,
             decoration: const InputDecoration(
@@ -44,7 +44,8 @@ class ChatInputBox extends StatelessWidget {
           )),
           Padding(
             padding: const EdgeInsets.all(4),
-            child: FloatingActionButton.small(onPressed: onSend,
+            child: FloatingActionButton.small(
+              onPressed: onSend,
               child: const Icon(Icons.send_rounded),
             ),
           )
