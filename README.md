@@ -11,7 +11,7 @@ This package provides a powerful bridge between your Flutter application and Goo
 - Set up your API key [scroll](#getting-started)
 - Initialize Gemini [scroll](#initialize-gemini)
 - Content-based APIs [scroll](#content-based-apis)
-  - Stream generate content [scroll](#stream-generate-content)
+  - Stream generates content [scroll](#stream-generates-content)
   - Text-only input [scroll](#text-only-input)
   - Text-and-image input [scroll](#text-and-image-input)
   - Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
@@ -48,7 +48,7 @@ Now you can create an instance
 
 ## Content-based APIs
 
-#### Stream generate content
+#### Stream generates content
 
 The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt to not wait for the complete result and, instead, use streaming to manage partial results.
 
@@ -63,8 +63,7 @@ gemini.streamGenerateContent('Utilizing Google Ads in Flutter')
   });
 ```
 ![Flutter gemini stream generates content](https://github.com/babakcode/flutter_gemini/assets/31356659/0a6f6eaa-684c-4708-b395-16176c7b0180)
-
-
+![Flutter Gemini stream](https://github.com/babakcode/flutter_gemini/assets/31356659/cabe2392-d584-4bbb-b5a9-a86db6b2d7f1)
 
 #### Text-only input
 
