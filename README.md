@@ -9,7 +9,7 @@ This package provides a powerful bridge between your Flutter application and Goo
 ## Features
 
 - Set up your API key [scroll](#getting-started)
-- Initialize gemini [scroll](#initialize-gemini)
+- Initialize Gemini [scroll](#initialize-gemini)
 - Content-based APIs [scroll](#content-based-apis)
   - Stream generate content [scroll](#stream-generate-content)
   - Text-only input [scroll](#text-only-input)
@@ -48,7 +48,7 @@ Now you can create an instance
 
 ## Content-based APIs
 
-### Stream generate content
+#### Stream generate content
 
 The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt to not wait for the complete result and, instead, use streaming to manage partial results.
 
@@ -62,8 +62,11 @@ gemini.streamGenerateContent('Utilizing Google Ads in Flutter')
     log('streamGenerateContent exception', error: e);
   });
 ```
+![Flutter gemini stream generates content](https://github.com/babakcode/flutter_gemini/assets/31356659/0a6f6eaa-684c-4708-b395-16176c7b0180)
 
-### Text-only input
+
+
+#### Text-only input
 
 This feature lets you perform natural language processing (NLP) tasks such as text completion and summarization.
 
@@ -77,7 +80,7 @@ gemini.text("Write a story about a magic backpack.")
 
 ![Flutter gemini Text only example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*41dnttHItU2v4hobJ_DGSA.gif "Flutter_Gemini example")
 
-### Text-and-image input
+#### Text-and-image input
 
 If the input contains both text and image, You can send a text prompt with an image to the gemini-pro-vision model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
 
@@ -103,7 +106,7 @@ If the input contains both text and image, You can send a text prompt with an im
 ![Flutter gemini Text and Image example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*3JEeJaBRSpif6hOl2pt3RA.gif "Flutter_Gemini example")
 
 
-### Multi-turn conversations (chat)
+#### Multi-turn conversations (chat)
 
 Using Gemini, you can build freeform conversations across multiple turns.
 
@@ -129,7 +132,7 @@ Using Gemini, you can build freeform conversations across multiple turns.
 ![Flutter gemini Text and Image example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*MoVz4Z5KpxVUocEHLmzDew.gif "Flutter_Gemini example")
 
 
-### Count tokens
+#### Count tokens
 
 When using long prompts, it might be useful to count tokens before sending any content to the model.
 
@@ -141,7 +144,7 @@ gemini.countTokens("Write a story about a magic backpack.")
     .catchError((e) => log('countTokens', error: e));
 ```
 
-### Model info
+#### Model info
 
 If you `GET` a model's URL, the API uses the `get` method to return information about that model such as version, display name, input token limit, etc.
 
@@ -153,7 +156,7 @@ gemini.info(model: 'gemini-pro')
     .catchError((e) => log('info', error: e));
 ```
 
-### List models
+#### List models
 
 If you `GET` the `models` directory, it uses the `list` method to list all of the models available through the API, including both the Gemini and PaLM family models.
 
@@ -165,7 +168,7 @@ gemini.listModels()
     .catchError((e) => log('listModels', error: e));
 ```
 
-### embedContents and batchEmbedContents
+#### embedContents and batchEmbedContents
 
 Embedding is a method that transforms information, like text, into a list of floating-point numbers in an array. Gemini enables the representation of text, such as words or sentences, in a vectorized form. This facilitates the comparison of embeddings, allowing for the identification of similarities between texts through mathematical techniques like cosine similarity. For instance, texts with similar subject matter or sentiment should exhibit similar embeddings.
 
