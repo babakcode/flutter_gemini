@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 import '../../flutter_gemini.dart';
-import '../models/generation_config/generation_config.dart';
 
 abstract class GeminiInterface {
   /// [listModels]
@@ -33,16 +32,16 @@ abstract class GeminiInterface {
   /// should have similar embeddings, which can be identified through mathematical
   /// comparison techniques such as cosine similarity.
   ///
-  /// Use the `embedding-001` model with either [embedContents] or [batchEmbedContents]
-  Future batchEmbedContents(
+  /// Use the `embedding-001` model with either [embedContent] or [batchEmbedContents]
+  Future<List<List<num>?>?> batchEmbedContents(
     List<String> texts, {
     String? modelName,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
   });
 
-  /// [embedContents] description in upper comments
-  Future embedContents(
+  /// [embedContent] description in upper comments
+  Future<List<num>?> embedContent(
     String text, {
     String? modelName,
     List<SafetySetting>? safetySettings,
@@ -62,8 +61,9 @@ abstract class GeminiInterface {
   /// completing the entire generation process.
   /// You can achieve faster interactions by not waiting
   /// for the entire result, and instead use streaming to handle partial results.
-  Future<Stream> streamGenerateContent(
+  Stream<Candidates> streamGenerateContent(
     String text, {
+    List<Uint8List>? images,
     String? modelName,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
@@ -82,7 +82,7 @@ abstract class GeminiInterface {
   /// the `gemini-pro-vision` model. The following snippets help you build a request and send it to the REST API.
   Future<Candidates?> textAndImage({
     required String text,
-    required Uint8List image,
+    required List<Uint8List> images,
     String? modelName,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,

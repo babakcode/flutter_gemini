@@ -14,7 +14,9 @@ void main() {
     await gemini
         .textAndImage(
           text: "What is this picture?",
-          image: file.readAsBytesSync(),
+          images: [
+            file.readAsBytesSync(),
+          ],
         )
         .then((value) => log(value?.output ?? ''))
         .catchError((e) => log('textAndImageInput exception', error: e));

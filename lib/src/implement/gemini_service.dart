@@ -25,6 +25,7 @@ class GeminiService {
     required Map<String, Object>? data,
     GenerationConfig? generationConfig,
     List<SafetySetting>? safetySettings,
+        bool isStreamResponse = false,
   }) async {
     /// add local safetySettings or global safetySetting which added
     /// in [init] constructor
@@ -50,6 +51,8 @@ class GeminiService {
       route,
       data: jsonEncode(data),
       queryParameters: {'key': apiKey},
+      options: Options(
+          responseType: isStreamResponse == true ? ResponseType.stream : null),
     );
   }
 
@@ -60,39 +63,4 @@ class GeminiService {
     );
   }
 
-  Future<Stream> postStream(
-    String route, {
-    required Map<String, Object>? data,
-    GenerationConfig? generationConfig,
-    List<SafetySetting>? safetySettings,
-  }) async {
-    /// add local safetySettings or global safetySetting which added
-    /// in [init] constructor
-    if (safetySettings != null || this.safetySettings != null) {
-      final listSafetySettings = safetySettings ?? this.safetySettings ?? [];
-      final items = [];
-      for (final safetySetting in listSafetySettings) {
-        items.add({
-          'category': safetySetting.category.value,
-          'threshold': safetySetting.threshold.value,
-        });
-      }
-      data?['safetySettings'] = items;
-    }
-
-    /// add local generationConfig or global generationConfig which added
-    /// in [init] constructor
-    if (generationConfig != null || this.generationConfig != null) {
-      data?['generationConfig'] =
-          generationConfig?.toJson() ?? this.generationConfig?.toJson() ?? {};
-    }
-    final rs = await dio.get(
-      route,
-      queryParameters: {'key': apiKey},
-      options: Options(
-          responseType:
-              ResponseType.stream), // Set the response type to `stream`.
-    );
-    return rs.data.stream;
-  }
 }

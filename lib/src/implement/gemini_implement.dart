@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:dio/dio.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
-import 'package:flutter_gemini/src/models/content/content.dart';
 import '../config/constants.dart';
-import '../models/gemini_model/gemini_model.dart';
-import '../models/gemini_response/gemini_response.dart';
-import '../models/gemini_safety/gemini_safety.dart';
-import '../models/generation_config/generation_config.dart';
 import '../repository/gemini_interface.dart';
 import 'gemini_service.dart';
 
@@ -14,6 +11,8 @@ import 'gemini_service.dart';
 /// In this class we declare and implement all the functions body
 class GeminiImpl implements GeminiInterface {
   final GeminiService api;
+
+  final splitter = const LineSplitter();
 
   final List<SafetySetting>? safetySettings;
   final GenerationConfig? generationConfig;
@@ -33,6 +32,8 @@ class GeminiImpl implements GeminiInterface {
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
+    Gemini.instance.typeProvider?.clear();
+
     final response = await api.post(
       "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
       data: {'contents': chats.map((e) => e.toJson()).toList()},
@@ -40,6 +41,7 @@ class GeminiImpl implements GeminiInterface {
       safetySettings: safetySettings,
     );
 
+    Gemini.instance.typeProvider?.loading = false;
     return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
   }
 
@@ -48,91 +50,14 @@ class GeminiImpl implements GeminiInterface {
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-    try {
-      final response = await api.post(
-        "${modelName ?? Constants.defaultModel}:countTokens",
-        data: {
-          'contents': [
-            {
-              "parts": [
-                {"text": text},
-              ]
-            }
-          ]
-        },
-        generationConfig: generationConfig,
-        safetySettings: safetySettings,
-      );
-      return response.data?['totalTokens'];
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<GeminiModel> info({required String model}) async {
-    try {
-      final response = await api.get('models/$model');
-      return GeminiModel.fromJson(response.data);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<List<GeminiModel>> listModels() async {
-    try {
-      final response = await api.get('models');
-      return GeminiModel.jsonToList(response.data['models']);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<Stream> streamGenerateContent(String text,
-      {String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
-    throw UnimplementedError(
-        'Unimplemented method. This feature will be added in the newer versions');
-    //   final response = await api.postStream(
-    //   "${modelName ?? Constants.defaultModel}:streamGenerateContent",
-    //   data: {
-    //     'contents': [
-    //       {
-    //         "parts": [
-    //           {"text": text},
-    //         ]
-    //       }
-    //     ]
-    //   },
-    //   generationConfig: generationConfig,
-    //   safetySettings: safetySettings,
-    // );
-    // return response;
-  }
-
-  @override
-  Future<Candidates?> textAndImage(
-      {required String text,
-      required Uint8List image,
-      String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
+    Gemini.instance.typeProvider?.clear();
     final response = await api.post(
-      "${modelName ?? 'models/gemini-pro-vision'}:${Constants.defaultGenerateType}",
+      "${modelName ?? Constants.defaultModel}:countTokens",
       data: {
         'contents': [
           {
             "parts": [
               {"text": text},
-              {
-                "inline_data": {
-                  "mime_type": "image/jpeg",
-                  "data": base64Encode(image)
-                }
-              }
             ]
           }
         ]
@@ -140,6 +65,129 @@ class GeminiImpl implements GeminiInterface {
       generationConfig: generationConfig,
       safetySettings: safetySettings,
     );
+    Gemini.instance.typeProvider?.loading = false;
+    return response.data?['totalTokens'];
+  }
+
+  @override
+  Future<GeminiModel> info({required String model}) async {
+    Gemini.instance.typeProvider?.clear();
+    final response = await api.get('models/$model');
+
+    Gemini.instance.typeProvider?.loading = false;
+    return GeminiModel.fromJson(response.data);
+  }
+
+  @override
+  Future<List<GeminiModel>> listModels() async {
+    Gemini.instance.typeProvider?.clear();
+    final response = await api.get('models');
+    Gemini.instance.typeProvider?.loading = false;
+    return GeminiModel.jsonToList(response.data['models']);
+  }
+
+  @override
+  Stream<Candidates> streamGenerateContent(String text,
+      {List<Uint8List>? images,
+      String? modelName,
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig}) async* {
+    Gemini.instance.typeProvider?.clear();
+
+    final response = await api.post(
+      '${modelName ?? ((images?.isNotEmpty ?? false) ? 'models/gemini-pro-vision' : Constants.defaultModel)}:streamGenerateContent',
+      isStreamResponse: true,
+      data: {
+        'contents': [
+          {
+            "parts": [
+              {"text": text},
+              ...?images?.map((e) => {
+                    "inline_data": {
+                      "mime_type": "image/jpeg",
+                      "data": base64Encode(e)
+                    }
+                  })
+            ]
+          }
+        ]
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+    Gemini.instance.typeProvider?.loading = false;
+
+    if (response.statusCode == 200) {
+      final ResponseBody rb = response.data;
+      int index = 0;
+      String modelStr = '';
+
+      await for (final list in rb.stream) {
+        String res = utf8.decode(list);
+
+        res = res.trim();
+
+        if (index == 0 && res.startsWith("[")) {
+          res = res.replaceFirst('[', '');
+        }
+        if (res.startsWith(',')) {
+          res = res.replaceFirst(',', '');
+        }
+        if (res.endsWith(']')) {
+          res = res.substring(0, res.length - 1);
+        }
+
+        res = res.trim();
+
+        for (final line in splitter.convert(res)) {
+          if (modelStr == '' && line == ',') {
+            continue;
+          }
+          modelStr += line;
+          try {
+            final candidate = Candidates.fromJson(
+                (jsonDecode(modelStr)['candidates'] as List?)?.firstOrNull);
+            yield candidate;
+            Gemini.instance.typeProvider?.add(candidate.output);
+            modelStr = '';
+          } catch (e) {
+            continue;
+          }
+        }
+        index++;
+      }
+    }
+  }
+
+  @override
+  Future<Candidates?> textAndImage(
+      {required String text,
+      required List<Uint8List> images,
+      String? modelName,
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig}) async {
+    Gemini.instance.typeProvider?.clear();
+    final response = await api.post(
+      "${modelName ?? 'models/gemini-pro-vision'}:${Constants.defaultGenerateType}",
+      data: {
+        'contents': [
+          {
+            "parts": [
+              {"text": text},
+              ...images.map((e) => {
+                "inline_data": {
+                  "mime_type": "image/jpeg",
+                  "data": base64Encode(e)
+                }
+              })
+            ]
+          }
+        ]
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+    Gemini.instance.typeProvider?.loading = false;
     return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
   }
 
@@ -148,6 +196,7 @@ class GeminiImpl implements GeminiInterface {
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
+    Gemini.instance.typeProvider?.clear();
     final response = await api.post(
       "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
       data: {
@@ -163,58 +212,62 @@ class GeminiImpl implements GeminiInterface {
       safetySettings: safetySettings,
     );
 
-    return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+    final candidate =
+        GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+    Gemini.instance.typeProvider?.add(candidate?.output);
+    return candidate;
   }
 
   @override
-  Future batchEmbedContents(List<String> texts,
+  Future<List<List<num>?>?> batchEmbedContents(List<String> texts,
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-    throw UnimplementedError(
-        'Unimplemented method. This feature will be added in the newer versions');
-    // final response = await api.post(
-    //   "${modelName ?? 'models/embedding-001'}:batchEmbedContents",
-    //   data: {
-    //     'requests': texts.map((e) => {
-    //       'model': 'models/embedding-001',
-    //       'content': [
-    //         {
-    //           'parts': [
-    //             {'text': e},
-    //           ]
-    //         }
-    //       ]
-    //     }).toList(),
-    //   },
-    //   generationConfig: generationConfig,
-    //   safetySettings: safetySettings,
-    // );
-    // return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+    Gemini.instance.typeProvider?.clear();
+    final response = await api.post(
+      "${modelName ?? 'models/embedding-001'}:batchEmbedContents",
+      data: {
+        'requests': texts
+            .map((e) => {
+                  "model": "models/embedding-001",
+                  "content": {
+                    "parts": [
+                      {"text": e}
+                    ]
+                  }
+                })
+            .toList(),
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+
+    Gemini.instance.typeProvider?.loading = false;
+    return (response.data['embeddings'] as List)
+        .map((e) => (e['values'] as List).cast<num>())
+        .toList();
   }
 
   @override
-  Future embedContents(String text,
+  Future<List<num>?> embedContent(String text,
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-    throw UnimplementedError(
-        'Unimplemented method. This feature will be added in the newer versions');
-    // final response = await api.post(
-    //   "${modelName ?? 'models/embedding-001'}:embedContent",
-    //   data: {
-    //     'model': 'models/embedding-001',
-    //     'contents': [
-    //       {
-    //         'parts': [
-    //           {'text': text},
-    //         ]
-    //       }
-    //     ]
-    //   },
-    //   generationConfig: generationConfig,
-    //   safetySettings: safetySettings,
-    // );
-    // return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+    Gemini.instance.typeProvider?.clear();
+    final response = await api.post(
+      "${modelName ?? 'models/embedding-001'}:embedContent",
+      data: {
+        "model": "models/embedding-001",
+        "content": {
+          "parts": [
+            {"text": text}
+          ]
+        }
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+    Gemini.instance.typeProvider?.loading = false;
+    return (response.data['embedding']['values'] as List).cast<num>();
   }
 }

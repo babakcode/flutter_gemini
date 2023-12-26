@@ -10,7 +10,7 @@ topics:
   - flutter-gemini
 screenshots:
   - description: Flutter_Gemini example screenshot
-    path: example/screenshots/gemini_cover_2.jpg
+    path: example/screenshots/gemini_screenshot.png
   - description: Flutter_Gemini example
     path: example/screenshots/gemini_cover.jpeg
 

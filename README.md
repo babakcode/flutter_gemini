@@ -11,13 +11,16 @@ This package provides a powerful bridge between your Flutter application and Goo
 - Set up your API key [scroll](#getting-started)
 - Initialize gemini [scroll](#initialize-gemini)
 - Content-based APIs [scroll](#content-based-apis)
+    - Stream generate content [scroll](#stream-generate-content)
     - Text-only input [scroll](#text-only-input)
     - Text-and-image input [scroll](#text-and-image-input)
     - Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
     - Count tokens [scroll](#count-tokens)
     - Model info [scroll](#model-info)
     - List models [scroll](#list-models)
-    - Unimplemented methods [scroll](#unimplemented-methods)
+    - EmbedContents and batchEmbedContents [scroll](#embedcontents-and-batchembedcontents)
+- [Flutter Gemini widgets](#flutter-gemini-widgets)
+    - 
 
 ## Getting started
 
@@ -45,6 +48,21 @@ Now you can create an instance
 
 ## Content-based APIs
 
+### Stream generate content
+
+The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt to not wait for the complete result and, instead, use streaming to manage partial results.
+
+```dart
+final gemini = Gemini.instance;
+
+gemini.streamGenerateContent('Utilizing Google Ads in Flutter')
+  .listen((value) {
+    print(value.output);
+  }).onError((e) {
+    log('streamGenerateContent exception', error: e);
+  });
+```
+
 ### Text-only input
 
 This feature lets you perform natural language processing (NLP) tasks such as text completion and summarization.
@@ -63,13 +81,14 @@ gemini.text("Write a story about a magic backpack.")
 
 If the input contains both text and image, You can send a text prompt with an image to the gemini-pro-vision model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
 
-```dart
+```diff
   final gemini = Gemini.instance;
 
   final file = File('assets/img.png');
   gemini.textAndImage(
         text: "What is this picture?", /// text
-        image: file.readAsBytesSync(), /// image
+-       image: file.readAsBytesSync(), /// image
++       images: [file.readAsBytesSync()] /// list of images
       )
       .then((value) => log(value?.content?.parts?.last.text ?? ''))
       .catchError((e) => log('textAndImageInput', error: e));
@@ -140,10 +159,46 @@ gemini.listModels()
     .catchError((e) => log('listModels', error: e));
 ```
 
-### Unimplemented Methods
+### embedContents and batchEmbedContents
 
-`embedContents`, `batchEmbedContents`, `streamGenerateContent`, 
+Embedding is a method that transforms information, like text, into a list of floating-point numbers in an array. Gemini enables the representation of text, such as words or sentences, in a vectorized form. This facilitates the comparison of embeddings, allowing for the identification of similarities between texts through mathematical techniques like cosine similarity. For instance, texts with similar subject matter or sentiment should exhibit similar embeddings.
 
 ```dart
-// In newer version will be added
+/// `embedContents`
+gemini.embedContent('text').then((value) {
+  print(value); /// output like: [ 1.3231, 1.33421, -0.123123 ]
+});
+
+/// `batchEmbedContents`
+gemini.batchEmbedContents(['text 1', 'text 2']).then((value) {
+  print(value); /// output like: [ [ 1.3231, 1.33421, -0.123123 ] ]
+});
+```
+
+## Flutter Gemini Widgets
+
+The `GeminiResponseTypeView` widget allows you to present your search results using a **"typing"** animation, all **without** the need for utilizing the **setState()** function!
+
+```dart
+final Widget result = GeminiResponseTypeView(
+  builder: (context, child, response, loading) {
+
+    if (loading) {
+      /// show loading animation or use CircularProgressIndicator();
+      return Lottie.asset('assets/lottie/ai.json');
+    }
+
+    /// The runtimeType of response is String?
+    if (response != null) {
+      return Markdown(
+        data: response,
+        selectable: true,
+      );
+    } else {
+      
+      /// idle state
+      return const Center(child: Text('Search something!'));
+    }
+  },
+);
 ```

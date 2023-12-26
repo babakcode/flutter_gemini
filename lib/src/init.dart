@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter_gemini/src/provider/gemini_response_provider.dart';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 import 'config/constants.dart';
 import 'implement/gemini_service.dart';
@@ -127,11 +128,13 @@ class Gemini implements GeminiInterface {
   /// You can achieve faster interactions by not waiting
   /// for the entire result, and instead use streaming to handle partial results.
   @override
-  Future<Stream> streamGenerateContent(String text,
-          {String? modelName,
+  Stream<Candidates> streamGenerateContent(String text,
+          {List<Uint8List>? images,
+          String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
       _impl.streamGenerateContent(text,
+          images: images,
           generationConfig: generationConfig,
           safetySettings: safetySettings,
           modelName: modelName);
@@ -141,13 +144,13 @@ class Gemini implements GeminiInterface {
   @override
   Future<Candidates?> textAndImage(
           {required String text,
-          required Uint8List image,
+          required List<Uint8List> images,
           String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
       _impl.textAndImage(
           text: text,
-          image: image,
+          images: images,
           generationConfig: generationConfig,
           safetySettings: safetySettings,
           modelName: modelName);
@@ -173,9 +176,9 @@ class Gemini implements GeminiInterface {
   /// should have similar embeddings, which can be identified through mathematical
   /// comparison techniques such as cosine similarity.
   ///
-  /// Use the `embedding-001` model with either [embedContents] or [batchEmbedContents]
+  /// Use the `embedding-001` model with either [embedContent] or [batchEmbedContents]
   @override
-  Future batchEmbedContents(List<String> texts,
+  Future<List<List<num>?>?> batchEmbedContents(List<String> texts,
           {String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
@@ -185,12 +188,14 @@ class Gemini implements GeminiInterface {
           modelName: modelName);
 
   @override
-  Future embedContents(String text,
+  Future<List<num>?> embedContent(String text,
           {String? modelName,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
-      _impl.embedContents(text,
+      _impl.embedContent(text,
           safetySettings: safetySettings,
           generationConfig: generationConfig,
           modelName: modelName);
+
+  GeminiResponseProvider? typeProvider;
 }
