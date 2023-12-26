@@ -81,17 +81,23 @@ gemini.text("Write a story about a magic backpack.")
 
 If the input contains both text and image, You can send a text prompt with an image to the gemini-pro-vision model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
 
-```diff
+```dart
   final gemini = Gemini.instance;
 
   final file = File('assets/img.png');
   gemini.textAndImage(
         text: "What is this picture?", /// text
--       image: file.readAsBytesSync(), /// image
-+       images: [file.readAsBytesSync()] /// list of images
+        images: [file.readAsBytesSync()] /// list of images
       )
       .then((value) => log(value?.content?.parts?.last.text ?? ''))
       .catchError((e) => log('textAndImageInput', error: e));
+```
+
+###### Note that, there are changes on properties
+
+```diff
+- image: file.readAsBytesSync(), /// image
++ images: [file.readAsBytesSync()] /// list of images
 ```
 
 ![Flutter gemini Text and Image example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*3JEeJaBRSpif6hOl2pt3RA.gif "Flutter_Gemini example")
@@ -177,7 +183,7 @@ gemini.batchEmbedContents(['text 1', 'text 2']).then((value) {
 
 ## Flutter Gemini Widgets
 
-The `GeminiResponseTypeView` widget allows you to present your search results using a **"typing"** animation, all **without** the need for utilizing the **setState()** function!
+The `GeminiResponseTypeView` widget allows you to present your search results using a **`typing`** animation, all **`without`** the need for utilizing the **`setState()`** function!
 
 ```dart
 final Widget result = GeminiResponseTypeView(
