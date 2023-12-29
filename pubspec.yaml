@@ -27,11 +27,11 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  dio: ^5.4.0
+  dio:
   flutter:
     sdk: flutter
-  freezed_annotation: ^2.4.1
-  json_annotation: ^4.8.1
+  freezed_annotation:
+  json_annotation:
 
 dev_dependencies:
   flutter_test:
