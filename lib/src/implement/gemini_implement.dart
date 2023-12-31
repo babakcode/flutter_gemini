@@ -121,9 +121,22 @@ class GeminiImpl implements GeminiInterface {
       final ResponseBody rb = response.data;
       int index = 0;
       String modelStr = '';
+      List<int> cacheUnits = [];
+      List<int> list = [];
 
-      await for (final list in rb.stream) {
-        String res = utf8.decode(list);
+      await for (final itemList in rb.stream) {
+        list = cacheUnits + itemList;
+
+        cacheUnits.clear();
+
+        String res = "";
+        try {
+          res = utf8.decode(list);
+        } catch (e) {
+          print("error: $e");
+          cacheUnits = list;
+          continue;
+        }
 
         res = res.trim();
 
