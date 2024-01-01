@@ -32,11 +32,15 @@ class Gemini implements GeminiInterface {
   /// to see request progress
   static bool enableDebugging = false;
 
+  // String? baseURL;
+
   /// private constructor [Gemini._]
   Gemini._(
       {
       /// [apiKey] is required property
       required String apiKey,
+      String? baseURL,
+      Map<String, dynamic>? headers,
 
       /// theses properties are optional
       List<SafetySetting>? safetySettings,
@@ -45,9 +49,9 @@ class Gemini implements GeminiInterface {
       : _impl = GeminiImpl(
           api: GeminiService(
               Dio(BaseOptions(
-                baseUrl:
-                    '${Constants.baseUrl}${version ?? Constants.defaultVersion}/',
+                baseUrl: '${baseURL ?? Constants.baseUrl}${version ?? Constants.defaultVersion}/',
                 contentType: 'application/json',
+                headers: headers,
               )),
               apiKey: apiKey),
           safetySettings: safetySettings,
@@ -67,6 +71,8 @@ class Gemini implements GeminiInterface {
   /// singleton initialize [Gemini.init]
   factory Gemini.init(
       {required String apiKey,
+      String? baseURL,
+      Map<String, dynamic>? headers,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
       bool? enableDebugging,
@@ -78,6 +84,8 @@ class Gemini implements GeminiInterface {
       _firstInit = false;
       instance = Gemini._(
           apiKey: apiKey,
+          baseURL: baseURL,
+          headers: headers,
           safetySettings: safetySettings,
           generationConfig: generationConfig,
           version: version);
@@ -97,6 +105,18 @@ class Gemini implements GeminiInterface {
           generationConfig: generationConfig,
           safetySettings: safetySettings,
           modelName: modelName);
+
+  @override
+  Stream<Candidates> streamChat(
+    List<Content> chats, {
+    String? modelName,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  }) =>
+      _impl.streamChat(chats,
+          modelName: modelName,
+          safetySettings: safetySettings,
+          generationConfig: generationConfig);
 
   /// [countTokens] When using long prompts, it might be useful to count tokens
   /// before sending any content to the model.
