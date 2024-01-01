@@ -49,9 +49,7 @@ class Gemini implements GeminiInterface {
       : _impl = GeminiImpl(
           api: GeminiService(
               Dio(BaseOptions(
-                baseUrl: baseURL != null
-                    ? "$baseURL${version ?? Constants.defaultVersion}/"
-                    : '${Constants.baseUrl}${version ?? Constants.defaultVersion}/',
+                baseUrl: '${baseURL ?? Constants.baseUrl}${version ?? Constants.defaultVersion}/',
                 contentType: 'application/json',
                 headers: headers,
               )),
