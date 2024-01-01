@@ -69,6 +69,13 @@ abstract class GeminiInterface {
     GenerationConfig? generationConfig,
   });
 
+  Stream<Candidates> streamChat(
+    List<Content> chats, {
+    String? modelName,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  });
+
   /// [chat] or `Multi-turn conversations`
   /// Using Gemini, you can build freeform conversations across multiple turns.
   Future<Candidates?> chat(
