@@ -57,7 +57,7 @@ class GeminiImpl implements GeminiInterface {
         'contents': [
           {
             "parts": [
-              {"text": text},
+              {"text": text}
             ]
           }
         ]
@@ -121,7 +121,6 @@ class GeminiImpl implements GeminiInterface {
         try {
           res = utf8.decode(list);
         } catch (e) {
-          print("error: $e");
           cacheUnits = list;
           continue;
         }

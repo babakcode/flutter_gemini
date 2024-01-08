@@ -1,3 +1,11 @@
+## 2.0.1
+* ## new feature
+* Decode utf-8
+* streamChat
+
+## 2.0.0
+* work for lower Dart SDK version
+
 ## 2.0.0-dev-1
 
 * ## Add new crucial features

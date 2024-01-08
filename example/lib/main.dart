@@ -1,4 +1,5 @@
 import 'package:example/sections/chat.dart';
+import 'package:example/sections/chat_stream.dart';
 import 'package:example/sections/embed_batch_contents.dart';
 import 'package:example/sections/embed_content.dart';
 import 'package:example/sections/response_widget_stream.dart';
@@ -54,11 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
     SectionItem(0, 'Stream text', const SectionTextStreamInput()),
     SectionItem(1, 'textAndImage', const SectionTextAndImageInput()),
     SectionItem(2, 'chat', const SectionChat()),
-    SectionItem(3, 'text', const SectionTextInput()),
-    SectionItem(4, 'embedContent', const SectionEmbedContent()),
-    SectionItem(5, 'batchEmbedContents', const SectionBatchEmbedContents()),
+    SectionItem(3, 'Stream chat', const SectionStreamChat()),
+    SectionItem(4, 'text', const SectionTextInput()),
+    SectionItem(5, 'embedContent', const SectionEmbedContent()),
+    SectionItem(6, 'batchEmbedContents', const SectionBatchEmbedContents()),
     SectionItem(
-        6, 'response without setState()', const ResponseWidgetSection()),
+        7, 'response without setState()', const ResponseWidgetSection()),
   ];
 
   @override
