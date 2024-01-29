@@ -19,6 +19,9 @@ This package provides a powerful bridge between your Flutter application and Goo
   - Model info [scroll](#model-info)
   - List models [scroll](#list-models)
   - EmbedContents and batchEmbedContents [scroll](#embedcontents-and-batchembedcontents)
+- Advanced Usage [scroll](#advanced-usage)
+  - Safety settings [scroll](#safety-settings)
+  - Generation configuration [scroll](#generation-configuration)
 - Flutter Gemini widgets [scroll](#flutter-gemini-widgets)
     
 
@@ -181,6 +184,44 @@ gemini.embedContent('text').then((value) {
 gemini.batchEmbedContents(['text 1', 'text 2']).then((value) {
   print(value); /// output like: [ [ 1.3231, 1.33421, -0.123123 ] ]
 });
+```
+
+## Advanced Usage
+
+The following sections discuss advanced use cases and lower-level details of the Flutter SDK for the Gemini API.
+
+#### Safety settings
+
+The `safety_settings` argument lets you configure what the model blocks and allows in both prompts and responses.
+
+```dart
+gemini.streamGenerateContent('Utilizing Google Ads in Flutter',
+          safetySettings: [
+            SafetySetting(
+              category: SafetyCategory.harassment,
+              threshold: SafetyThreshold.blockLowAndAbove,
+            ),
+            SafetySetting(
+              category: SafetyCategory.hateSpeech,
+              threshold: SafetyThreshold.blockOnlyHigh,
+            )
+          ])
+        .listen((value) {})
+        .onError((e) {});
+```
+
+#### Generation configuration
+
+The `generation_config` argument allows you to modify the generation parameters.
+
+```dart
+gemini.streamGenerateContent('Utilizing Google Ads in Flutter',
+          generationConfig: GenerationConfig(
+            temperature: 0.75,
+            maxOutputTokens: 512,
+          ))
+      .listen((value) {})
+      .onError((e) {});
 ```
 
 ## Flutter Gemini Widgets
