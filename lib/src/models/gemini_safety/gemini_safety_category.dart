@@ -13,7 +13,7 @@ enum SafetyCategory {
 
   /// [dangerous]
   /// Promotes, facilitates, or encourages harmful acts.
-  dangerous('HARM_CATEGORY_DANGEROUS');
+  dangerous('HARM_CATEGORY_DANGEROUS_CONTENT');
 
   const SafetyCategory(this.value);
   final String value;
