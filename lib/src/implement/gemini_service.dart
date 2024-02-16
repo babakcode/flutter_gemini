@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_gemini/src/repository/api_interface.dart';
+import 'package:flutter_gemini/src/utils/gemini_exception_handler_mixin.dart';
 import '../init.dart';
 import '../models/gemini_safety/gemini_safety.dart';
 import '../models/generation_config/generation_config.dart';
 
 /// [GeminiService] is api helper service class
-class GeminiService {
+class GeminiService extends ApiInterface with GeminiExceptionHandler {
   final Dio dio;
   final String apiKey;
 
@@ -17,9 +19,7 @@ class GeminiService {
     }
   }
 
-  GenerationConfig? generationConfig;
-  List<SafetySetting>? safetySettings;
-
+  @override
   Future<Response> post(
     String route, {
     required Map<String, Object>? data,
@@ -47,19 +47,22 @@ class GeminiService {
       data?['generationConfig'] =
           generationConfig?.toJson() ?? this.generationConfig?.toJson() ?? {};
     }
-    return dio.post(
-      route,
-      data: jsonEncode(data),
-      queryParameters: {'key': apiKey},
-      options: Options(
-          responseType: isStreamResponse == true ? ResponseType.stream : null),
-    );
+
+    return handler(() => dio.post(
+          route,
+          data: jsonEncode(data),
+          queryParameters: {'key': apiKey},
+          options: Options(
+              responseType:
+                  isStreamResponse == true ? ResponseType.stream : null),
+        ));
   }
 
+  @override
   Future<Response> get(String route) async {
-    return dio.get(
-      route,
-      queryParameters: {'key': apiKey},
-    );
+    return handler(() => dio.get(
+          route,
+          queryParameters: {'key': apiKey},
+        ));
   }
 }

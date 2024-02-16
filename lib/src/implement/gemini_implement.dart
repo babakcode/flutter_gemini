@@ -94,7 +94,6 @@ class GeminiImpl implements GeminiInterface {
     GenerationConfig? generationConfig,
   }) async* {
     Gemini.instance.typeProvider?.clear();
-
     final response = await api.post(
       '${modelName ?? Constants.defaultModel}:streamGenerateContent',
       isStreamResponse: true,

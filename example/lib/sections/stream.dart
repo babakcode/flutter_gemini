@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:typed_data';
-
 import 'package:example/widgets/chat_input_box.dart';
 import 'package:example/widgets/item_image_view.dart';
 import 'package:flutter/material.dart';
@@ -104,21 +102,25 @@ class _SectionTextInputStreamState extends State<SectionTextStreamInput> {
           },
           onSend: () {
             if (controller.text.isNotEmpty) {
+              print('request');
+
               searchedText = controller.text;
               controller.clear();
               gemini
                   .streamGenerateContent(searchedText!, images: images)
-                  .listen((value) {
+                  .handleError((e) {
+                if (e is GeminiException) {
+                  print(e);
+                }
+              }).listen((value) {
                 setState(() {
                   images = null;
                 });
                 // result = (result ?? '') + (value.output ?? '');
 
                 if (value.finishReason != 'STOP') {
-                  finishReason = 'Finish reason is `RECITATION`';
+                  finishReason = 'Finish reason is `${value.finishReason}`';
                 }
-              }).onError((e) {
-                log('streamGenerateContent error', error: e);
               });
             }
           },
