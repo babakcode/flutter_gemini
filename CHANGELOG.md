@@ -1,3 +1,7 @@
+## 2.0.3
+* ## new feature
+* GeminiException( message , statusCode)
+
 ## 2.0.1
 * ## new feature
 * Decode utf-8
