@@ -40,7 +40,6 @@ dependencies:
   lottie: ^2.7.0
   flutter_markdown: ^0.6.18+2
   image_picker: ^1.0.5
-  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
