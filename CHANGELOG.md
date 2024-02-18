@@ -1,3 +1,8 @@
+## 2.0.4-dev.1
+* ## new feature
+* reInitialize
+* add mime type from Uint8List
+
 ## 2.0.3
 * ## new feature
 * GeminiException( message , statusCode)

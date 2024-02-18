@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
+import 'package:mime/mime.dart';
 import '../config/constants.dart';
 import '../repository/gemini_interface.dart';
 import 'gemini_service.dart';
@@ -176,7 +177,8 @@ class GeminiImpl implements GeminiInterface {
               {"text": text},
               ...?images?.map((e) => {
                     "inline_data": {
-                      "mime_type": "image/jpeg",
+                      "mime_type":
+                          lookupMimeType('', headerBytes: e) ?? "image/jpg",
                       "data": base64Encode(e)
                     }
                   })
@@ -261,7 +263,8 @@ class GeminiImpl implements GeminiInterface {
               {"text": text},
               ...images.map((e) => {
                     "inline_data": {
-                      "mime_type": "image/jpeg",
+                      "mime_type":
+                          lookupMimeType('', headerBytes: e) ?? "image/jpg",
                       "data": base64Encode(e)
                     }
                   })

@@ -13,6 +13,9 @@ void main() async {
   /// flutter run --dart-define=apiKey='Your Api Key'
   Gemini.init(
       apiKey: const String.fromEnvironment('apiKey'), enableDebugging: true);
+
+  Gemini.reInitialize(apiKey: "ali", enableDebugging: false);
+
   runApp(const MyApp());
 }
 
