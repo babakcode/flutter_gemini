@@ -28,9 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Gemini',
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
-      darkTheme: ThemeData.dark(
-        useMaterial3: true,
-      ).copyWith(
+      darkTheme: ThemeData.dark().copyWith(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           cardTheme: CardTheme(color: Colors.blue.shade900)),
       home: const MyHomePage(),
