@@ -63,11 +63,12 @@ class GeminiImpl implements GeminiInterface {
       "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
       data: {
         'contents': chats.map((e) => e.toJson()).toList(),
-        'system_instruction': {
-          "parts": [
-            {"text": systemPrompt}
-          ]
-        },
+        if (systemPrompt != null)
+          'system_instruction': {
+            "parts": [
+              {"text": systemPrompt}
+            ]
+          },
       },
       generationConfig: generationConfig,
       safetySettings: safetySettings,
