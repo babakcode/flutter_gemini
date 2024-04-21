@@ -92,11 +92,12 @@ class Gemini implements GeminiInterface {
   Future<Candidates?> chat(List<Content> chats,
           {String? modelName,
           List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig}) =>
+          GenerationConfig? generationConfig, String? systemPrompt}) =>
       _impl.chat(chats,
           generationConfig: generationConfig,
           safetySettings: safetySettings,
-          modelName: modelName);
+          modelName: modelName,
+          systemPrompt: systemPrompt);
 
   /// [countTokens] When using long prompts, it might be useful to count tokens
   /// before sending any content to the model.
