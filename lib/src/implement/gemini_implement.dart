@@ -31,7 +31,7 @@ class GeminiImpl implements GeminiInterface {
   Future<Candidates?> chat(List<Content> chats,
       {String? modelName,
       List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
+      GenerationConfig? generationConfig, String? systemPrompt}) async {
     Gemini.instance.typeProvider?.clear();
 
     final response = await api.post(
@@ -60,7 +60,15 @@ class GeminiImpl implements GeminiInterface {
               {"text": text},
             ]
           }
-        ]
+        ],
+      "system_instruction":
+    {
+      "parts": [
+        {
+          "text": systemPrompt
+        }
+      ]
+    },
       },
       generationConfig: generationConfig,
       safetySettings: safetySettings,
