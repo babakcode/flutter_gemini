@@ -199,4 +199,9 @@ class Gemini implements GeminiInterface {
           modelName: modelName);
 
   GeminiResponseProvider? typeProvider;
+  
+  @override
+  Future<void> cancelRequest() {
+    return _impl.cancelRequest();
+  }
 }

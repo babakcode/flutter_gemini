@@ -253,4 +253,9 @@ class GeminiImpl implements GeminiInterface {
     Gemini.instance.typeProvider?.loading = false;
     return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
   }
+  
+  @override
+ Future<void> cancelRequest() async {
+    await api.cancelRequest();
+  }
 }

@@ -87,4 +87,7 @@ abstract class GeminiInterface {
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
   });
+
+  // cancel request
+  Future<void> cancelRequest();
 }

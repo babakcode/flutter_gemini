@@ -9,6 +9,7 @@ import '../models/generation_config/generation_config.dart';
 class GeminiService {
   final Dio dio;
   final String apiKey;
+  CancelToken? cancelToken;
 
   GeminiService(this.dio, {required this.apiKey}) {
     if (!kReleaseMode && Gemini.enableDebugging) {
@@ -29,6 +30,7 @@ class GeminiService {
   }) async {
     /// add local safetySettings or global safetySetting which added
     /// in [init] constructor
+    cancelToken ??= CancelToken();
     if (safetySettings != null || this.safetySettings != null) {
       final listSafetySettings = safetySettings ?? this.safetySettings ?? [];
       final items = [];
@@ -53,13 +55,23 @@ class GeminiService {
       queryParameters: {'key': apiKey},
       options: Options(
           responseType: isStreamResponse == true ? ResponseType.stream : null),
+      cancelToken: cancelToken,
     );
   }
 
   Future<Response> get(String route) async {
+    cancelToken ??= CancelToken();
     return dio.get(
       route,
       queryParameters: {'key': apiKey},
+      cancelToken: cancelToken
     );
+  }
+
+  Future<void> cancelRequest() async {
+    if (cancelToken != null) {
+      cancelToken!.cancel();
+      cancelToken = null;
+    }
   }
 }
