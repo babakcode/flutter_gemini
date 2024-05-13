@@ -49,14 +49,16 @@ class GeminiService extends ApiInterface with GeminiExceptionHandler {
       data?['generationConfig'] =
           generationConfig?.toJson() ?? this.generationConfig?.toJson() ?? {};
     }
-    return dio.post(
-      route,
-      data: jsonEncode(data),
-      queryParameters: {'key': apiKey},
-      options: Options(
-          responseType: isStreamResponse == true ? ResponseType.stream : null),
-      cancelToken: cancelToken,
-    );
+    
+    return handler(() => dio.post(
+          route,
+          data: jsonEncode(data),
+          queryParameters: {'key': apiKey},
+          options: Options(
+              responseType:
+                  isStreamResponse == true ? ResponseType.stream : null),
+       cancelToken: cancelToken,
+        ));
   }
 
   @override
