@@ -302,13 +302,6 @@ class GeminiImpl implements GeminiInterface {
           {
             "parts": [
               {"text": text},
-              ...images.map((e) => {
-                    "inline_data": {
-                      "mime_type":
-                          lookupMimeType('', headerBytes: e) ?? "image/jpg",
-                      "data": base64Encode(e)
-                    }
-                  })
             ]
           }
         ]
