@@ -11,6 +11,7 @@ import '../models/generation_config/generation_config.dart';
 class GeminiService extends ApiInterface with GeminiExceptionHandler {
   final Dio dio;
   final String apiKey;
+  CancelToken? cancelToken;
 
   GeminiService(this.dio, {required this.apiKey}) {
     if (!kReleaseMode && (Gemini.enableDebugging ?? false)) {
@@ -29,6 +30,7 @@ class GeminiService extends ApiInterface with GeminiExceptionHandler {
   }) async {
     /// add local safetySettings or global safetySetting which added
     /// in [init] constructor
+    cancelToken ??= CancelToken();
     if (safetySettings != null || this.safetySettings != null) {
       final listSafetySettings = safetySettings ?? this.safetySettings ?? [];
       final items = [];
@@ -47,7 +49,7 @@ class GeminiService extends ApiInterface with GeminiExceptionHandler {
       data?['generationConfig'] =
           generationConfig?.toJson() ?? this.generationConfig?.toJson() ?? {};
     }
-
+    
     return handler(() => dio.post(
           route,
           data: jsonEncode(data),
@@ -55,14 +57,24 @@ class GeminiService extends ApiInterface with GeminiExceptionHandler {
           options: Options(
               responseType:
                   isStreamResponse == true ? ResponseType.stream : null),
+       cancelToken: cancelToken,
         ));
   }
 
   @override
   Future<Response> get(String route) async {
+    cancelToken ??= CancelToken();
     return handler(() => dio.get(
           route,
           queryParameters: {'key': apiKey},
+          cancelToken: cancelToken
         ));
+  }
+
+  Future<void> cancelRequest() async {
+    if (cancelToken != null) {
+      cancelToken!.cancel();
+      cancelToken = null;
+    }
   }
 }

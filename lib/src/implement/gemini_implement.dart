@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
@@ -29,15 +30,47 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
+  Future<List<List<num>?>?> batchEmbedContents(List<String> texts,
+      {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
+    Gemini.instance.typeProvider?.clear();
+    final response = await api.post(
+      "${modelName ?? 'models/embedding-001'}:batchEmbedContents",
+      data: {
+        'requests': texts
+            .map((e) => {
+                  "model": "models/embedding-001",
+                  "content": {
+                    "parts": [
+                      {"text": e}
+                    ]
+                  }
+                })
+            .toList(),
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+
+    Gemini.instance.typeProvider?.loading = false;
+    return (response.data['embeddings'] as List).map((e) => (e['values'] as List).cast<num>()).toList();
+  }
+
+  @override
   Future<Candidates?> chat(List<Content> chats,
-      {String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
+      {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig, String? systemPrompt}) async {
     Gemini.instance.typeProvider?.clear();
 
     final response = await api.post(
       "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
-      data: {'contents': chats.map((e) => e.toJson()).toList()},
+      data: {
+        'contents': chats.map((e) => e.toJson()).toList(),
+        if (systemPrompt != null)
+          'system_instruction': {
+            "parts": [
+              {"text": systemPrompt}
+            ]
+          },
+      },
       generationConfig: generationConfig,
       safetySettings: safetySettings,
     );
@@ -47,10 +80,7 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future<int?> countTokens(String text,
-      {String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
+  Future<int?> countTokens(String text, {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
     Gemini.instance.typeProvider?.clear();
     final response = await api.post(
       "${modelName ?? Constants.defaultModel}:countTokens",
@@ -68,6 +98,26 @@ class GeminiImpl implements GeminiInterface {
     );
     Gemini.instance.typeProvider?.loading = false;
     return response.data?['totalTokens'];
+  }
+
+  @override
+  Future<List<num>?> embedContent(String text, {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
+    Gemini.instance.typeProvider?.clear();
+    final response = await api.post(
+      "${modelName ?? 'models/embedding-001'}:embedContent",
+      data: {
+        "model": "models/embedding-001",
+        "content": {
+          "parts": [
+            {"text": text}
+          ]
+        }
+      },
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+    );
+    Gemini.instance.typeProvider?.loading = false;
+    return (response.data['embedding']['values'] as List).cast<num>();
   }
 
   @override
@@ -161,10 +211,7 @@ class GeminiImpl implements GeminiInterface {
 
   @override
   Stream<Candidates> streamGenerateContent(String text,
-      {List<Uint8List>? images,
-      String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async* {
+      {List<Uint8List>? images, String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async* {
     Gemini.instance.typeProvider?.clear();
 
     final response = await api.post(
@@ -232,8 +279,7 @@ class GeminiImpl implements GeminiInterface {
           }
           modelStr += line;
           try {
-            final candidate = Candidates.fromJson(
-                (jsonDecode(modelStr)['candidates'] as List?)?.firstOrNull);
+            final candidate = Candidates.fromJson((jsonDecode(modelStr)['candidates'] as List?)?.firstOrNull);
             yield candidate;
             Gemini.instance.typeProvider?.add(candidate.output);
             modelStr = '';
@@ -247,15 +293,10 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future<Candidates?> textAndImage(
-      {required String text,
-      required List<Uint8List> images,
-      String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
+  Future<Candidates?> text(String text, {String? modelName, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async {
     Gemini.instance.typeProvider?.clear();
     final response = await api.post(
-      "${modelName ?? 'models/gemini-pro-vision'}:${Constants.defaultGenerateType}",
+      "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
       data: {
         'contents': [
           {
@@ -275,23 +316,30 @@ class GeminiImpl implements GeminiInterface {
       generationConfig: generationConfig,
       safetySettings: safetySettings,
     );
-    Gemini.instance.typeProvider?.loading = false;
-    return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+
+    final candidate = GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
+    Gemini.instance.typeProvider?.add(candidate?.output);
+    return candidate;
   }
 
   @override
-  Future<Candidates?> text(String text,
-      {String? modelName,
+  Future<Candidates?> textAndImage(
+      {required String text,
+      required List<Uint8List> images,
+      String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
     Gemini.instance.typeProvider?.clear();
     final response = await api.post(
-      "${modelName ?? Constants.defaultModel}:${Constants.defaultGenerateType}",
+      "${modelName ?? 'models/gemini-pro-vision'}:${Constants.defaultGenerateType}",
       data: {
         'contents': [
           {
             "parts": [
-              {"text": text}
+              {"text": text},
+              ...images.map((e) => {
+                    "inline_data": {"mime_type": "image/jpeg", "data": base64Encode(e)}
+                  })
             ]
           }
         ]
@@ -299,63 +347,12 @@ class GeminiImpl implements GeminiInterface {
       generationConfig: generationConfig,
       safetySettings: safetySettings,
     );
-
-    final candidate =
-        GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
-    Gemini.instance.typeProvider?.add(candidate?.output);
-    return candidate;
-  }
-
-  @override
-  Future<List<List<num>?>?> batchEmbedContents(List<String> texts,
-      {String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
-    Gemini.instance.typeProvider?.clear();
-    final response = await api.post(
-      "${modelName ?? 'models/embedding-001'}:batchEmbedContents",
-      data: {
-        'requests': texts
-            .map((e) => {
-                  "model": "models/embedding-001",
-                  "content": {
-                    "parts": [
-                      {"text": e}
-                    ]
-                  }
-                })
-            .toList(),
-      },
-      generationConfig: generationConfig,
-      safetySettings: safetySettings,
-    );
-
     Gemini.instance.typeProvider?.loading = false;
-    return (response.data['embeddings'] as List)
-        .map((e) => (e['values'] as List).cast<num>())
-        .toList();
+    return GeminiResponse.fromJson(response.data).candidates?.lastOrNull;
   }
-
+  
   @override
-  Future<List<num>?> embedContent(String text,
-      {String? modelName,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
-    Gemini.instance.typeProvider?.clear();
-    final response = await api.post(
-      "${modelName ?? 'models/embedding-001'}:embedContent",
-      data: {
-        "model": "models/embedding-001",
-        "content": {
-          "parts": [
-            {"text": text}
-          ]
-        }
-      },
-      generationConfig: generationConfig,
-      safetySettings: safetySettings,
-    );
-    Gemini.instance.typeProvider?.loading = false;
-    return (response.data['embedding']['values'] as List).cast<num>();
+ Future<void> cancelRequest() async {
+    await api.cancelRequest();
   }
 }
