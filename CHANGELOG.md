@@ -1,3 +1,7 @@
+## 2.0.5
+* ## new feature
+* prompt
+
 ## 2.0.4-dev.1
 * ## new feature
 * reInitialize

@@ -14,7 +14,7 @@ void main() async {
   Gemini.init(
       apiKey: const String.fromEnvironment('apiKey'), enableDebugging: true);
 
-  Gemini.reInitialize(apiKey: "ali", enableDebugging: false);
+  // Gemini.reInitialize(apiKey: "new api key", enableDebugging: false);
 
   runApp(const MyApp());
 }
