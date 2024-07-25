@@ -71,7 +71,7 @@ class Constants {
           "topK": 1
         },
         {
-          "name": "models/gemini-pro-vision",
+          "name": "models/gemini-1.5-flash",
           "version": "001",
           "displayName": "Gemini Pro Vision",
           "description":

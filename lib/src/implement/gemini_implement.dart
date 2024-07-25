@@ -231,7 +231,7 @@ class GeminiImpl implements GeminiInterface {
     Gemini.instance.typeProvider?.clear();
 
     final response = await api.post(
-      '${modelName ?? ((images?.isNotEmpty ?? false) ? 'models/gemini-pro-vision' : Constants.defaultModel)}:streamGenerateContent',
+      '${modelName ?? ((images?.isNotEmpty ?? false) ? 'models/gemini-1.5-flash' : Constants.defaultModel)}:streamGenerateContent',
       isStreamResponse: true,
       data: {
         'contents': [
@@ -345,7 +345,7 @@ class GeminiImpl implements GeminiInterface {
       GenerationConfig? generationConfig}) async {
     Gemini.instance.typeProvider?.clear();
     final response = await api.post(
-      "${modelName ?? 'models/gemini-pro-vision'}:${Constants.defaultGenerateType}",
+      "${modelName ?? 'models/gemini-1.5-flash'}:${Constants.defaultGenerateType}",
       data: {
         'contents': [
           {

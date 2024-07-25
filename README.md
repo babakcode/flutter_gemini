@@ -84,7 +84,7 @@ gemini.text("Write a story about a magic backpack.")
 
 #### Text-and-image input
 
-If the input contains both text and image, You can send a text prompt with an image to the gemini-pro-vision model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
+If the input contains both text and image, You can send a text prompt with an image to the gemini-1.5-flash model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
 
 ```dart
   final gemini = Gemini.instance;
