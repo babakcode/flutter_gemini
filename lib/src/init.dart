@@ -178,7 +178,7 @@ class Gemini implements GeminiInterface {
           modelName: modelName);
 
   /// [textAndImage] If the input contains both text and image, use
-  /// the `gemini-pro-vision` model. The following snippets help you build a request and send it to the REST API.
+  /// the `gemini-1.5-flash` model. The following snippets help you build a request and send it to the REST API.
   @override
   Future<Candidates?> textAndImage(
           {required String text,
