@@ -1,3 +1,7 @@
+## 2.0.6
+* ## Fixed
+* `gemini-pro-vision` is depreciated, changed to `gemini-1.5-flash`
+
 ## 2.0.5
 * ## new feature
 * prompt
