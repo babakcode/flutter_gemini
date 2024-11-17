@@ -1,3 +1,8 @@
+# 3.0.0-dev.1
+* ## new Feature
+1. Now you can use this package as a **dart** pkg.
+2. 
+
 ## 2.0.5
 * ## Fixed
 * `gemini-pro-vision` is depreciated, changed to `gemini-1.5-flash`

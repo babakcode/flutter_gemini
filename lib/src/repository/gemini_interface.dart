@@ -17,6 +17,7 @@ abstract class GeminiInterface {
   /// [text] Use the `generateContent` method to generate a response
   /// from the model given an input message.
   /// If the input contains only text, use the `gemini-pro` model.
+  @Deprecated('Please use the `prompt` or `promptStream` method')
   Future<Candidates?> text(
     String text, {
     String? modelName,
@@ -61,6 +62,7 @@ abstract class GeminiInterface {
   /// completing the entire generation process.
   /// You can achieve faster interactions by not waiting
   /// for the entire result, and instead use streaming to handle partial results.
+  @Deprecated('Please use the `prompt` or `promptStream` method')
   Stream<Candidates> streamGenerateContent(
     String text, {
     List<Uint8List>? images,
@@ -69,6 +71,7 @@ abstract class GeminiInterface {
     GenerationConfig? generationConfig,
   });
 
+  @Deprecated('Please use the `prompt` or `promptStream` method')
   Stream<Candidates> streamChat(
     List<Content> chats, {
     String? modelName,
@@ -78,6 +81,7 @@ abstract class GeminiInterface {
 
   /// [chat] or `Multi-turn conversations`
   /// Using Gemini, you can build freeform conversations across multiple turns.
+  @Deprecated('Please use the `prompt` or `promptStream` method')
   Future<Candidates?> chat(
     List<Content> chats, {
     String? modelName,
@@ -97,4 +101,23 @@ abstract class GeminiInterface {
 
   // cancel request
   Future<void> cancelRequest();
+
+  /// [prompt] If the input contains both text and image, use
+  /// the `gemini-1.5-flash` model. The following snippets help you build a request and send it to the REST API.
+  Future<Candidates?> prompt({
+    required List<Part> parts,
+    String? model,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  });
+
+  /// [prompt] If the input contains both text and image, use
+  /// the `gemini-1.5-flash` model. The following snippets help you build a request and send it to the REST API.
+  Stream<Candidates?> promptStream({
+    required List<Part> parts,
+    String? model,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  });
+
 }

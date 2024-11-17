@@ -1,20 +1,10 @@
-import 'package:example/sections/chat.dart';
-import 'package:example/sections/chat_stream.dart';
-import 'package:example/sections/embed_batch_contents.dart';
-import 'package:example/sections/embed_content.dart';
-import 'package:example/sections/response_widget_stream.dart';
-import 'package:example/sections/stream.dart';
-import 'package:example/sections/text_and_image.dart';
-import 'package:example/sections/text_only.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
-void main() async {
-  /// flutter run --dart-define=apiKey='Your Api Key'
-  Gemini.init(
-      apiKey: const String.fromEnvironment('apiKey'), enableDebugging: true);
+const apiKey = 'AIza------tMww4--------------';
+void main() {
 
-  // Gemini.reInitialize(apiKey: "new api key", enableDebugging: false);
+  Gemini.init(apiKey: apiKey, enableDebugging: true);
 
   runApp(const MyApp());
 }
@@ -25,69 +15,82 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Gemini',
-      themeMode: ThemeMode.dark,
-      debugShowCheckedModeBanner: false,
-      darkTheme: ThemeData.dark().copyWith(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          cardTheme: CardTheme(color: Colors.blue.shade900)),
-      home: const MyHomePage(),
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class SectionItem {
-  final int index;
-  final String title;
-  final Widget widget;
-
-  SectionItem(this.index, this.title, this.widget);
-}
-
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedItem = 0;
-
-  final _sections = <SectionItem>[
-    SectionItem(0, 'Stream text', const SectionTextStreamInput()),
-    SectionItem(1, 'textAndImage', const SectionTextAndImageInput()),
-    SectionItem(2, 'chat', const SectionChat()),
-    SectionItem(3, 'Stream chat', const SectionStreamChat()),
-    SectionItem(4, 'text', const SectionTextInput()),
-    SectionItem(5, 'embedContent', const SectionEmbedContent()),
-    SectionItem(6, 'batchEmbedContents', const SectionBatchEmbedContents()),
-    SectionItem(
-        7, 'response without setState()', const ResponseWidgetSection()),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(_selectedItem == 0
-            ? 'Flutter Gemini'
-            : _sections[_selectedItem].title),
-        actions: [
-          PopupMenuButton<int>(
-            initialValue: _selectedItem,
-            onSelected: (value) => setState(() => _selectedItem = value),
-            itemBuilder: (context) => _sections.map((e) {
-              return PopupMenuItem<int>(value: e.index, child: Text(e.title));
-            }).toList(),
-            child: const Icon(Icons.more_vert_rounded),
-          )
-        ],
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
       ),
-      body: IndexedStack(
-        index: _selectedItem,
-        children: _sections.map((e) => e.widget).toList(),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FilledButton(onPressed: () {
+
+              Gemini.instance.promptStream(parts: [
+                Part.text('What is the Ipv6? How can I set my domain ipv6 to cloudflare?'),
+              ]).listen((value) {
+                print(value?.output);
+              });
+
+
+              // Gemini.instance.text('Write a story about a magic backpack.').then((value) {
+              //   setState(() {
+              //     print('value?.output ${value?.output}');
+              //   });
+              // },).catchError((e) {
+              //   print('error ${e}');
+              // });
+
+              // Gemini.instance.text('Write a story about a magic backpack');
+
+            }, child: Text('Search'))
+          ],
+        ),
       ),
     );
   }

@@ -1,20 +1,30 @@
-import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import '../candidates/candidates.dart';
 import '../prompt_feedback/prompt_feedback.dart';
-part 'gemini_response.freezed.dart';
-part 'gemini_response.g.dart';
 
-/// [GeminiResponse] is the value in the response of request
-@unfreezed
-class GeminiResponse with _$GeminiResponse {
-  factory GeminiResponse({
-    List<Candidates>? candidates,
-    PromptFeedback? promptFeedback,
-  }) = _GeminiResponse;
+class GeminiResponse {
+  List<Candidates>? candidates;
+  PromptFeedback? promptFeedback;
 
-  factory GeminiResponse.fromJson(Map<String, Object?> json) =>
-      _$GeminiResponseFromJson(json);
+  GeminiResponse({
+    this.candidates,
+    this.promptFeedback,
+  });
+
+  factory GeminiResponse.fromJson(Map<String, dynamic> json) => GeminiResponse(
+        candidates: (json['candidates'] as List<dynamic>?)
+            ?.map((e) => Candidates.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        promptFeedback: json['promptFeedback'] == null
+            ? null
+            : PromptFeedback.fromJson(
+                json['promptFeedback'] as Map<String, dynamic>,
+              ),
+      );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'candidates': candidates,
+        'promptFeedback': promptFeedback,
+      };
 
   static List<GeminiResponse> jsonToList(List list) => list
       .map((e) => GeminiResponse.fromJson(e as Map<String, dynamic>))

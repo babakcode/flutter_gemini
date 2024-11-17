@@ -1,22 +1,36 @@
-import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+class GenerationConfig {
+  List<String>? stopSequences;
+  double? temperature;
+  int? maxOutputTokens;
+  double? topP;
+  int? topK;
 
-part 'generation_config.freezed.dart';
-part 'generation_config.g.dart';
+  GenerationConfig({
+    this.stopSequences,
+    this.temperature,
+    this.maxOutputTokens,
+    this.topP,
+    this.topK,
+  });
 
-/// [GenerationConfig] is used when we want to declare response types
-@unfreezed
-class GenerationConfig with _$GenerationConfig {
-  factory GenerationConfig({
-    List<String>? stopSequences,
-    double? temperature,
-    int? maxOutputTokens,
-    double? topP,
-    int? topK,
-  }) = _GenerationConfig;
+  factory GenerationConfig.fromJson(Map<String, dynamic> json) =>
+      GenerationConfig(
+        stopSequences: (json['stopSequences'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList(),
+        temperature: (json['temperature'] as num?)?.toDouble(),
+        maxOutputTokens: (json['maxOutputTokens'] as num?)?.toInt(),
+        topP: (json['topP'] as num?)?.toDouble(),
+        topK: (json['topK'] as num?)?.toInt(),
+      );
 
-  factory GenerationConfig.fromJson(Map<String, Object?> json) =>
-      _$GenerationConfigFromJson(json);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'stopSequences': stopSequences,
+        'temperature': temperature,
+        'maxOutputTokens': maxOutputTokens,
+        'topP': topP,
+        'topK': topK,
+      };
 
   static List<GenerationConfig> jsonToList(List list) => list
       .map((e) => GenerationConfig.fromJson(e as Map<String, dynamic>))

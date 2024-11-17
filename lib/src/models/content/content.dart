@@ -1,20 +1,26 @@
-import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import '../parts/parts.dart';
-part 'content.freezed.dart';
-part 'content.g.dart';
+import '../part/part.dart';
 
-/// [Content] is the value in request response
-@unfreezed
-class Content with _$Content {
-  factory Content({
-    List<Parts>? parts,
-    String? role,
-  }) = _Content;
+class Content {
 
-  factory Content.fromJson(Map<String, Object?> json) =>
-      _$ContentFromJson(json);
+  List<Part>? parts;
+  String? role;
+
+  Content({
+    this.parts,
+    this.role,
+  });
+
+  factory Content.fromJson(Map<String, dynamic> json) =>
+      Content(
+        parts: (json['parts'] as List?)?.map((e) => Part.fromJson(e)).toList(),
+        role: json['role'] as String?,
+      );
 
   static List<Content> jsonToList(List list) =>
       list.map((e) => Content.fromJson(e as Map<String, dynamic>)).toList();
+
+  Map<String, dynamic> toJson() => {
+    'parts': parts?.map((e) => Part.toJson(e)).toList(),
+    'role': role,
+  };
 }

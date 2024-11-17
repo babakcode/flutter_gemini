@@ -1,17 +1,16 @@
-import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../flutter_gemini.dart';
 
-part 'parts.freezed.dart';
-part 'parts.g.dart';
+class Parts implements Part{
+  String? text;
 
-/// [Parts] is the value in the response of request
-@unfreezed
-class Parts with _$Parts {
-  factory Parts({
-    String? text,
-  }) = _Parts;
+  Parts({
+    this.text,
+  });
 
-  factory Parts.fromJson(Map<String, Object?> json) => _$PartsFromJson(json);
+  factory Parts.fromJson(Map<String, dynamic> json) =>
+      Parts(text: json['text'] as String?);
+
+  Map<String, dynamic> toJson() => <String, dynamic>{'text': text};
 
   static List<Parts> jsonToList(List list) =>
       list.map((e) => Parts.fromJson(e as Map<String, dynamic>)).toList();

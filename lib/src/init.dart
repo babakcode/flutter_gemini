@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter_gemini/src/provider/gemini_response_provider.dart';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
+import 'package:flutter_gemini/src/models/part/part.dart';
 import 'config/constants.dart';
 import 'implement/gemini_service.dart';
 import 'models/content/content.dart';
@@ -13,38 +13,42 @@ import 'package:dio/dio.dart';
 import 'implement/gemini_implement.dart';
 import 'models/gemini_safety/gemini_safety.dart';
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
-
 /// [Gemini]
 /// Flutter Google Gemini SDK. Google Gemini is a set of cutting-edge large language models
 ///   (LLMs) designed to be the driving force behind Google's future AI initiatives.
 ///   implements [GeminiInterface]
 ///   and [GeminiInterface] defines all methods of Gemini
+///   Here's a simple example of using this API:
+///
+/// ```dart
+/// const apiKey = 'AIza...';
+///
+/// void main() async {
+///   Gemini.init(apiKey: apiKey);
+///   final prompt = Gemini.instance.prompt(parts: [
+///     Part.text('Write a story about a magic backpack.'),
+///   ]);
+///   print(prompt?.output);
+/// }
+/// ```
 class Gemini implements GeminiInterface {
   /// [enableDebugging]
   /// to see request progress
   static bool? enableDebugging = false;
 
   /// private constructor [Gemini._]
-  Gemini._(
-      {
-      /// [apiKey] is required property
-      required String apiKey,
-      String? baseURL,
-      Map<String, dynamic>? headers,
+  Gemini._({
+    /// [apiKey] is required property
+    required String apiKey,
+    String? baseURL,
+    Map<String, dynamic>? headers,
 
-      /// theses properties are optional
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig,
-      String? version})
-      : _impl = GeminiImpl(
+    /// theses properties are optional
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    String? version,
+    this.disableAutoUpdateModelName = false,
+  }) : _impl = GeminiImpl(
           api: GeminiService(
               Dio(BaseOptions(
                 baseUrl:
@@ -67,45 +71,70 @@ class Gemini implements GeminiInterface {
   ///  - [_impl] functions logic
   GeminiImpl _impl;
 
-  /// singleton initialize [Gemini.init]
-  factory Gemini.init(
-      {required String apiKey,
-      String? baseURL,
-      Map<String, dynamic>? headers,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig,
-      bool? enableDebugging,
-      String? version}) {
+  /// [Gemini]
+  /// Flutter Google Gemini SDK. Google Gemini is a set of cutting-edge large language models
+  ///   (LLMs) designed to be the driving force behind Google's future AI initiatives.
+  ///   implements [GeminiInterface]
+  ///   and [GeminiInterface] defines all methods of Gemini
+  ///   Here's a simple example of using this API:
+  ///
+  /// ```dart
+  /// const apiKey = 'AIza...';
+  ///
+  /// void main() async {
+  ///   Gemini.init(apiKey: apiKey);
+  ///   final prompt = Gemini.instance.prompt(parts: [
+  ///     Part.text('Write a story about a magic backpack.'),
+  ///   ]);
+  ///   print(prompt?.output);
+  /// }
+  /// ```
+  factory Gemini.init({
+    required String apiKey,
+    String? baseURL,
+    Map<String, dynamic>? headers,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    bool? enableDebugging,
+    String? version,
+    bool disableAutoUpdateModelName = false,
+  }) {
     Gemini.enableDebugging = enableDebugging;
     if (_firstInit) {
       _firstInit = false;
       instance = Gemini._(
-          apiKey: apiKey,
-          baseURL: baseURL,
-          headers: headers,
-          safetySettings: safetySettings,
-          generationConfig: generationConfig,
-          version: version);
-    }
-    return instance;
-  }
-
-  factory Gemini.reInitialize(
-      {required String apiKey,
-      String? baseURL,
-      Map<String, dynamic>? headers,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig,
-      bool? enableDebugging,
-      String? version}) {
-    Gemini.enableDebugging = enableDebugging;
-    instance = Gemini._(
         apiKey: apiKey,
         baseURL: baseURL,
         headers: headers,
         safetySettings: safetySettings,
         generationConfig: generationConfig,
-        version: version);
+        version: version,
+        disableAutoUpdateModelName: disableAutoUpdateModelName,
+      );
+    }
+    return instance;
+  }
+
+  factory Gemini.reInitialize({
+    required String apiKey,
+    String? baseURL,
+    Map<String, dynamic>? headers,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    bool? enableDebugging,
+    String? version,
+    bool disableAutoUpdateModelName = false,
+  }) {
+    Gemini.enableDebugging = enableDebugging;
+    instance = Gemini._(
+      apiKey: apiKey,
+      baseURL: baseURL,
+      headers: headers,
+      safetySettings: safetySettings,
+      generationConfig: generationConfig,
+      version: version,
+      disableAutoUpdateModelName: disableAutoUpdateModelName,
+    );
     return instance;
   }
 
@@ -165,6 +194,7 @@ class Gemini implements GeminiInterface {
   /// completing the entire generation process.
   /// You can achieve faster interactions by not waiting
   /// for the entire result, and instead use streaming to handle partial results.
+  @Deprecated('Please use `prompt` or `promptStream` instead')
   @override
   Stream<Candidates> streamGenerateContent(String text,
           {List<Uint8List>? images,
@@ -179,6 +209,7 @@ class Gemini implements GeminiInterface {
 
   /// [textAndImage] If the input contains both text and image, use
   /// the `gemini-1.5-flash` model. The following snippets help you build a request and send it to the REST API.
+  @Deprecated('Please use `prompt` or `promptStream` instead')
   @override
   Future<Candidates?> textAndImage(
           {required String text,
@@ -196,6 +227,7 @@ class Gemini implements GeminiInterface {
   /// [text] Use the `generateContent` method to generate a response
   /// from the model given an input message.
   /// If the input contains only text, use the `gemini-pro` model.
+  @Deprecated('Please use `prompt` or `promptStream` instead')
   @override
   Future<Candidates?> text(String text,
           {String? modelName,
@@ -235,10 +267,38 @@ class Gemini implements GeminiInterface {
           generationConfig: generationConfig,
           modelName: modelName);
 
-  GeminiResponseProvider? typeProvider;
+  dynamic typeProvider;
+  bool disableAutoUpdateModelName;
 
   @override
-  Future<void> cancelRequest() {
-    return _impl.cancelRequest();
+  Future<void> cancelRequest() => _impl.cancelRequest();
+
+  @override
+  Future<Candidates?> prompt(
+    {
+      required List<Part> parts,
+      String? model,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  }) =>
+      _impl.prompt(parts: parts,
+          generationConfig: generationConfig,
+          model: model,
+          safetySettings: safetySettings,);
+
+  @override
+  Stream<Candidates?> promptStream({required List<Part> parts, String? model, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig})  =>
+      _impl.promptStream(parts: parts,
+        generationConfig: generationConfig,
+        model: model,
+        safetySettings: safetySettings,);
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

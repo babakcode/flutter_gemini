@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_gemini/src/repository/api_interface.dart';
 import 'package:flutter_gemini/src/utils/gemini_exception_handler_mixin.dart';
 import '../init.dart';
@@ -14,7 +13,7 @@ class GeminiService extends ApiInterface with GeminiExceptionHandler {
   CancelToken? cancelToken;
 
   GeminiService(this.dio, {required this.apiKey}) {
-    if (!kReleaseMode && (Gemini.enableDebugging ?? false)) {
+    if ((Gemini.enableDebugging ?? false)) {
       dio.interceptors
           .add(LogInterceptor(requestBody: true, responseBody: true));
     }

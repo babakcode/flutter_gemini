@@ -11,5 +11,7 @@ export 'src/models/generation_config/generation_config.dart';
 export 'src/models/gemini_safety/gemini_safety_category.dart';
 export 'src/models/gemini_safety/gemini_safety_threshold.dart';
 export 'src/utils/candidate_extension.dart';
-export 'src/widgets/gemini_response_type_view.dart';
 export 'src/utils/gemini_exception.dart';
+
+export 'src/models/part/part.dart'
+    show FileDataPart, FilePart, TextPart, Part, InlineData, InlinePart;
