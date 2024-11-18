@@ -1,7 +1,8 @@
-# 3.0.0-dev.1
+# 3.0.0-dev.2
 * ## new Feature
 1. Now you can use this package as a **dart** pkg.
-2. 
+2. prompt
+3. promptStream
 
 ## 2.0.5
 * ## Fixed
