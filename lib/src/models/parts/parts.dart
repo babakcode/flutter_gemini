@@ -1,6 +1,6 @@
 import '../../../flutter_gemini.dart';
 
-class Parts implements Part{
+class Parts implements Part {
   String? text;
 
   Parts({

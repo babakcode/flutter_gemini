@@ -79,8 +79,8 @@ class _SectionChatState extends State<SectionChat> {
             Markdown(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                data:
-                    (content.parts?.lastOrNull as TextPart?)?.text ?? 'cannot generate data!'),
+                data: (content.parts?.lastOrNull as TextPart?)?.text ??
+                    'cannot generate data!'),
           ],
         ),
       ),

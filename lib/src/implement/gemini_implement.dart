@@ -73,7 +73,6 @@ class GeminiImpl implements GeminiInterface {
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
       String? systemPrompt}) async {
-
     // get current model name related to this method
     modelName = await _checkModel(
       userModel: modelName,
@@ -106,7 +105,6 @@ class GeminiImpl implements GeminiInterface {
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-
     // get current model name related to this method
     modelName = await _checkModel(
       userModel: modelName,
@@ -137,7 +135,6 @@ class GeminiImpl implements GeminiInterface {
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-
     // get current model name related to this method
     modelName = await _checkModel(
       userModel: modelName,
@@ -186,7 +183,6 @@ class GeminiImpl implements GeminiInterface {
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
   }) async* {
-
     // get current model name related to this method
     modelName = await _checkModel(
       userModel: modelName,
@@ -264,7 +260,6 @@ class GeminiImpl implements GeminiInterface {
       String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async* {
-
     // get current model name related to this method
     modelName = await _checkModel(
       userModel: modelName,
@@ -357,7 +352,6 @@ class GeminiImpl implements GeminiInterface {
       {String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-
     // get current model name related to this method
     modelName = await _checkModel(
       userModel: modelName,
@@ -394,7 +388,6 @@ class GeminiImpl implements GeminiInterface {
       String? modelName,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
-
     // get current model name related to this method
     modelName = await _checkModel(
       userModel: modelName,
@@ -432,15 +425,15 @@ class GeminiImpl implements GeminiInterface {
   Future<String> _checkModel({
     required String? userModel,
     required String expectedModel,
-  }) async
-  {
+  }) async {
     if (Gemini.instance.disableAutoUpdateModelName) {
       return userModel ?? expectedModel;
     }
 
     _models ??= await listModels();
 
-    if (userModel != null && !_models!.any((element) => element.name == userModel)) {
+    if (userModel != null &&
+        !_models!.any((element) => element.name == userModel)) {
       log('This model is deprecated, Please use the correct one!',
           name: 'GEMINI_WARNING');
     }
@@ -451,22 +444,26 @@ class GeminiImpl implements GeminiInterface {
 
     log(
       'UPDATE_REQUIRED | Please notify the developer to address this issue. '
-          'Alternatively, you can create a fork, resolve the issue, '
-          'and submit a pull request to contribute the fix.',
+      'Alternatively, you can create a fork, resolve the issue, '
+      'and submit a pull request to contribute the fix.',
       name: 'GEMINI_WARNING',
     );
 
-    int index = _models!.indexWhere((element) => element.name?.toLowerCase().contains('latest') ?? false);
-    if(index != -1){
+    int index = _models!.indexWhere(
+        (element) => element.name?.toLowerCase().contains('latest') ?? false);
+    if (index != -1) {
       return _models![index].name!;
     }
-    index = _models!.indexWhere((element) => element.name?.toLowerCase().contains('flash') ?? false);
-    if(index != -1){
+    index = _models!.indexWhere(
+        (element) => element.name?.toLowerCase().contains('flash') ?? false);
+    if (index != -1) {
       return _models![index].name!;
     }
-    if((userModel?.toLowerCase().contains('pro') ?? false) || expectedModel.toLowerCase().contains('pro')){
-      index = _models!.indexWhere((element) => element.name?.contains('pro') ?? false);
-      if(index != -1){
+    if ((userModel?.toLowerCase().contains('pro') ?? false) ||
+        expectedModel.toLowerCase().contains('pro')) {
+      index = _models!
+          .indexWhere((element) => element.name?.contains('pro') ?? false);
+      if (index != -1) {
         return _models![index].name!;
       }
     }
@@ -475,8 +472,12 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Future<Candidates?> prompt({required List<Part> parts, String? model, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig,}) async {
-
+  Future<Candidates?> prompt({
+    required List<Part> parts,
+    String? model,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  }) async {
     // get current model name related to this method
     model = await _checkModel(
       userModel: model,
@@ -488,7 +489,7 @@ class GeminiImpl implements GeminiInterface {
       "$model:${Constants.defaultGenerateType}",
       data: {
         'contents': [
-          { 'parts': parts.map((e) => Part.toJson(e)).toList() }
+          {'parts': parts.map((e) => Part.toJson(e)).toList()}
         ]
       },
       generationConfig: generationConfig,
@@ -499,8 +500,11 @@ class GeminiImpl implements GeminiInterface {
   }
 
   @override
-  Stream<Candidates?> promptStream({required List<Part> parts, String? model, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig}) async* {
-
+  Stream<Candidates?> promptStream(
+      {required List<Part> parts,
+      String? model,
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig}) async* {
     // get current model name related to this method
     model = await _checkModel(
       userModel: model,
@@ -511,7 +515,7 @@ class GeminiImpl implements GeminiInterface {
       '$model:streamGenerateContent',
       data: {
         'contents': [
-          { 'parts': parts.map((e) => Part.toJson(e)).toList() }
+          {'parts': parts.map((e) => Part.toJson(e)).toList()}
         ]
       },
       generationConfig: generationConfig,
@@ -519,11 +523,8 @@ class GeminiImpl implements GeminiInterface {
       isStreamResponse: true,
     );
 
-
     if (response.statusCode == 200) {
-
       final ResponseBody rb = response.data;
-
 
       int index = 0;
       String modelStr = '';

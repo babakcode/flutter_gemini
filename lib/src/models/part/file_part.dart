@@ -1,6 +1,6 @@
 part of 'part.dart';
 
-class FilePart implements Part{
+class FilePart implements Part {
   FileDataPart? fileData;
 
   FilePart(this.fileData);
@@ -9,10 +9,11 @@ class FilePart implements Part{
       list.map((e) => FilePart.fromJson(e as Map<String, dynamic>)).toList();
 
   Map<String, dynamic> toJson() => {
-    'fileData': fileData?.toJson(),
-  };
+        'fileData': fileData?.toJson(),
+      };
 
   factory FilePart.fromJson(Map<String, dynamic> json) =>
-      FilePart(json['file_data'] == null ? null : FileDataPart.fromJson(json['file_data']));
+      FilePart(json['file_data'] == null
+          ? null
+          : FileDataPart.fromJson(json['file_data']));
 }
-

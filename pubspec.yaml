@@ -27,7 +27,7 @@ environment:
 
 dependencies:
   dio: ^5.4.3+1
-  mime: ^1.0.5
+  mime: ^2.0.0
 
 dev_dependencies:
   test: ^1.24.0

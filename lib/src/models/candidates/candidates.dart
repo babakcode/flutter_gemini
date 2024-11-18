@@ -29,11 +29,11 @@ class Candidates {
   }
 
   Map<String, dynamic> toJson(Map<String, dynamic> json) => {
-    'content': content?.toJson(),
-    'finishReason': finishReason,
-    'index': index,
-    'safetyRatings': safetyRatings?.map((e) => e.toJson()).toList(),
-  };
+        'content': content?.toJson(),
+        'finishReason': finishReason,
+        'index': index,
+        'safetyRatings': safetyRatings?.map((e) => e.toJson()).toList(),
+      };
 
   Candidates copyWith(
     Content? content,

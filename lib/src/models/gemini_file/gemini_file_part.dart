@@ -1,4 +1,3 @@
-
 class GeminiFilePart {
   String? name;
   String? displayName;
@@ -28,8 +27,7 @@ class GeminiFilePart {
     this.videoMetadata,
   });
 
-  factory GeminiFilePart.fromJson(Map<String, dynamic> json) =>
-      GeminiFilePart(
+  factory GeminiFilePart.fromJson(Map<String, dynamic> json) => GeminiFilePart(
         name: json['name'] as String?,
         displayName: json['displayName'] as String?,
         mimeType: json['mimeType'] as String?,
@@ -45,20 +43,21 @@ class GeminiFilePart {
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-    'name': name,
-    'displayName': displayName,
-    'mimeType': mimeType,
-    'sizeBytes': sizeBytes,
-    'createTime': createTime,
-    'updateTime': updateTime,
-    'expirationTime': expirationTime,
-    'sha256Hash': sha256Hash,
-    'uri': uri,
-    'state': state,
-    'error': error,
-    'videoMetadata': videoMetadata,
-  };
+        'name': name,
+        'displayName': displayName,
+        'mimeType': mimeType,
+        'sizeBytes': sizeBytes,
+        'createTime': createTime,
+        'updateTime': updateTime,
+        'expirationTime': expirationTime,
+        'sha256Hash': sha256Hash,
+        'uri': uri,
+        'state': state,
+        'error': error,
+        'videoMetadata': videoMetadata,
+      };
 
-  static List<GeminiFilePart> jsonToList(List list) =>
-      list.map((e) => GeminiFilePart.fromJson(e as Map<String, dynamic>)).toList();
+  static List<GeminiFilePart> jsonToList(List list) => list
+      .map((e) => GeminiFilePart.fromJson(e as Map<String, dynamic>))
+      .toList();
 }

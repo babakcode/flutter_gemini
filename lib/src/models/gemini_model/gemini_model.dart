@@ -42,8 +42,7 @@ class GeminiModel {
         topK: (json['topK'] as num?)?.toInt(),
       );
 
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'name': name,
         'version': version,
         'displayName': displayName,

@@ -270,7 +270,6 @@ class Gemini implements GeminiInterface {
   @override
   Future<void> cancelRequest() => _impl.cancelRequest();
 
-
   /// ```dart
   /// Gemini.instance.prompt(parts: [
   ///     Part.text('Write a story about a magic backpack'),
@@ -279,17 +278,18 @@ class Gemini implements GeminiInterface {
   ///   });
   /// ```
   @override
-  Future<Candidates?> prompt(
-    {
-      required List<Part> parts,
-      String? model,
+  Future<Candidates?> prompt({
+    required List<Part> parts,
+    String? model,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
   }) =>
-      _impl.prompt(parts: parts,
-          generationConfig: generationConfig,
-          model: model,
-          safetySettings: safetySettings,);
+      _impl.prompt(
+        parts: parts,
+        generationConfig: generationConfig,
+        model: model,
+        safetySettings: safetySettings,
+      );
 
   ///
   /// ```dart
@@ -300,9 +300,15 @@ class Gemini implements GeminiInterface {
   ///  });
   ///```
   @override
-  Stream<Candidates?> promptStream({required List<Part> parts, String? model, List<SafetySetting>? safetySettings, GenerationConfig? generationConfig})  =>
-      _impl.promptStream(parts: parts,
+  Stream<Candidates?> promptStream(
+          {required List<Part> parts,
+          String? model,
+          List<SafetySetting>? safetySettings,
+          GenerationConfig? generationConfig}) =>
+      _impl.promptStream(
+        parts: parts,
         generationConfig: generationConfig,
         model: model,
-        safetySettings: safetySettings,);
+        safetySettings: safetySettings,
+      );
 }

@@ -2,7 +2,6 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 
 const apiKey = 'AIza------tMww4--------------';
 void main() {
-
   Gemini.init(apiKey: apiKey, enableDebugging: true);
 
   Gemini.instance.prompt(parts: [

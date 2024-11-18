@@ -58,7 +58,7 @@ class _SectionStreamChatState extends State<SectionStreamChat> {
                 setState(() {
                   if (chats.isNotEmpty &&
                       chats.last.role == value.content?.role) {
-                    (chats.last.parts?.lastOrNull as TextPart?)?.text  =
+                    (chats.last.parts?.lastOrNull as TextPart?)?.text =
                         '${(chats.last.parts!.last as TextPart?)?.text}${value.output}';
                   } else {
                     chats.add(Content(
@@ -89,8 +89,8 @@ class _SectionStreamChatState extends State<SectionStreamChat> {
             Markdown(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                data:
-                (content.parts?.lastOrNull as TextPart?)?.text ?? 'cannot generate data!'),
+                data: (content.parts?.lastOrNull as TextPart?)?.text ??
+                    'cannot generate data!'),
           ],
         ),
       ),
