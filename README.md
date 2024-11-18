@@ -11,9 +11,8 @@ This package provides a powerful bridge between your Flutter application and Goo
 - Set up your API key [scroll](#getting-started)
 - Initialize Gemini [scroll](#initialize-gemini)
 - Content-based APIs [scroll](#content-based-apis)
-  - Stream Generate Content [scroll](#stream-generate-content)
-  - Text-only input [scroll](#text-only-input)
-  - Text-and-image input [scroll](#text-and-image-input)
+  - promptStream [scroll](#prompt-stream)
+  - prompt [scroll](#prompt)
   - Multi-turn conversations (chat) [scroll](#multi-turn-conversations-chat)
   - Count tokens [scroll](#count-tokens)
   - Model info [scroll](#model-info)
@@ -22,26 +21,32 @@ This package provides a powerful bridge between your Flutter application and Goo
 - Advanced Usage [scroll](#advanced-usage)
   - Safety settings [scroll](#safety-settings)
   - Generation configuration [scroll](#generation-configuration)
-- Flutter Gemini widgets [scroll](#flutter-gemini-widgets)
+- Legacy APIs [scroll](#legacy-apis)
+  - Stream Generate Content [scroll](#stream-generate-content)
+  - Text-only input [scroll](#text-only-input)
+  - Text-and-image input [scroll](#text-and-image-input)
     
 
 ## Getting started
 
 To use the Gemini API, you'll need an API key. If you don't already have one, create a key in Google AI Studio. [Get an API key](https://ai.google.dev/).
 
-### online demo
+[//]: # (### online demo)
 
-[https://babakcode.github.io/flutter_gemini](https://babakcode.github.io/flutter_gemini)
+[//]: # ()
+[//]: # ([https://babakcode.github.io/flutter_gemini]&#40;https://babakcode.github.io/flutter_gemini&#41;)
 
 ## Initialize Gemini
 
 For initialization, you must call the init constructor for Flutter Gemini in the main function.
 
 ```dart
+const apiKey = '--- Your Gemini Api Key ---';
+
 void main() {
 
   /// Add this line
-  Gemini.init(apiKey: '--- Your Gemini Api Key ---');
+  Gemini.init(apiKey: apiKey);
 
   runApp(const MyApp());
 }
@@ -51,62 +56,62 @@ Now you can create an instance
 
 ## Content-based APIs
 
-#### Stream Generate Content
+### Prompt Stream
 
-The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt not to wait for the complete result and instead use streaming to manage partial results.
+Offers a powerful method `promptStream` that allows developers to interact with
+a stream of data in a flexible and efficient way. One of the key features of this package is
+the ability to use different types of `Part` classes,
+enabling the transmission of various forms of data.
 
-```dart
-final gemini = Gemini.instance;
-
-gemini.streamGenerateContent('Utilizing Google Ads in Flutter')
-  .listen((value) {
-    print(value.output);
-  }).onError((e) {
-    log('streamGenerateContent exception', error: e);
-  });
-```
-![Flutter gemini stream generates content](https://github.com/babakcode/flutter_gemini/assets/31356659/0a6f6eaa-684c-4708-b395-16176c7b0180)
-![Flutter Gemini stream](https://github.com/babakcode/flutter_gemini/assets/31356659/cabe2392-d584-4bbb-b5a9-a86db6b2d7f1)
-
-#### Text-only input
-
-This feature lets you perform natural language processing (NLP) tasks such as text completion and summarization.
+**Usage Example**
+To use the promptStream method, you can pass an array of Part objects, where each Part can represent different types of data. For instance, a simple request to ask a question could look like this:
 
 ```dart
-final gemini = Gemini.instance;
-
-gemini.text("Write a story about a magic backpack.")
-  .then((value) => print( value?.output )) /// or value?.content?.parts?.last.text
-  .catchError((e) => print(e));
+Gemini.instance.promptStream(parts: [
+  Part.text('Write a story about a magic backpack'),
+]).listen((value) {
+  print(value?.output);
+});
 ```
 
-![Flutter gemini Text only example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*41dnttHItU2v4hobJ_DGSA.gif "Flutter_Gemini example")
+#### Available Part Types
 
-#### Text-and-image input
+1. `Part.text` | `TextPart`: For sending text data.
+2. `Part.inline` | `InlinePart`: For sending raw byte data.
+3. `Part.file` | `FilePart`: For sending uploaded file to Gemini cloud ( will be updated )
+4. ...
+5. ( Others will be added ASAP )
 
-If the input contains both text and image, You can send a text prompt with an image to the gemini-1.5-flash model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
+These `Part` types are abstracted into a base class, providing flexibility to add more data types in the future. This modular design ensures that users can easily extend the package to accommodate their specific needs, whether it's for text, files, or binary data.
+
+By using these different `Part` classes, you can tailor the behavior of the `promptStream` method to meet your application's specific requirements.
+
+### Prompt
+
+You can send a question or request and get an immediate response using the `prompt` method. This method works with various `Part` types to allow flexible input, such as text, videos, or audios.
+
+**Usage Example**
+
+The following example shows how to use the `Flutter_Gemini` package with the `Future` approach to send a text request and handle the response:
 
 ```dart
-  final gemini = Gemini.instance;
-
-  final file = File('assets/img.png');
-  gemini.textAndImage(
-        text: "What is this picture?", /// text
-        images: [file.readAsBytesSync()] /// list of images
-      )
-      .then((value) => log(value?.content?.parts?.last.text ?? ''))
-      .catchError((e) => log('textAndImageInput', error: e));
+Gemini.instance.prompt(parts: [
+  Part.text('Write a story about a magic backpack'),
+]).then((value) {
+  print(value?.output);
+}).catchError((e) {
+  print('error ${e}');
+});
 ```
 
-###### Note that, there are changes on properties
+*Explanation*:
 
-```diff
-- image: file.readAsBytesSync(), /// image
-+ images: [file.readAsBytesSync()] /// list of images
-```
+* The `prompt` method takes a list of `Part` objects, such as `Part.text` ( `TextPart` ), to define the request.
+* The response is processed once it is available, and you can access the result via value?.output.
+* Errors can be handled using catchError.
 
-![Flutter gemini Text and Image example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*3JEeJaBRSpif6hOl2pt3RA.gif "Flutter_Gemini example")
 
+This method provides a straightforward way to handle asynchronous tasks without dealing with streams.
 
 #### Multi-turn conversations (chat)
 
@@ -117,13 +122,13 @@ Using Gemini, you can build freeform conversations across multiple turns.
 
   gemini.chat([
     Content(parts: [
-      Parts(text: 'Write the first line of a story about a magic backpack.')],
+      Part.text('Write the first line of a story about a magic backpack.')],
         role: 'user'),
     Content(parts: [ 
-      Parts(text: 'In the bustling city of Meadow brook, lived a young girl named Sophie. She was a bright and curious soul with an imaginative mind.')],
+      Part.text('In the bustling city of Meadow brook, lived a young girl named Sophie. She was a bright and curious soul with an imaginative mind.')],
         role: 'model'),
     Content(parts: [ 
-      Parts(text: 'Can you set it in a quiet village in 1600s France?')], 
+      Part.text('Can you set it in a quiet village in 1600s France?')], 
         role: 'user'),
     ])
         .then((value) => log(value?.output ?? 'without output'))
@@ -224,30 +229,61 @@ gemini.streamGenerateContent('Utilizing Google Ads in Flutter',
       .onError((e) {});
 ```
 
-## Flutter Gemini Widgets
+## Legacy APIs
 
-The `GeminiResponseTypeView` widget allows you to present your search results using a **`typing`** animation, all **`without`** the need for utilizing the **`setState()`** function!
+
+#### Stream Generate Content
+
+The model usually gives a response once it finishes generating the entire output. To speed up interactions, you can opt not to wait for the complete result and instead use streaming to manage partial results.
 
 ```dart
-final Widget result = GeminiResponseTypeView(
-  builder: (context, child, response, loading) {
+final gemini = Gemini.instance;
 
-    if (loading) {
-      /// show loading animation or use CircularProgressIndicator();
-      return Lottie.asset('assets/lottie/ai.json');
-    }
-
-    /// The runtimeType of response is String?
-    if (response != null) {
-      return Markdown(
-        data: response,
-        selectable: true,
-      );
-    } else {
-      
-      /// idle state
-      return const Center(child: Text('Search something!'));
-    }
-  },
-);
+gemini.streamGenerateContent('Utilizing Google Ads in Flutter')
+  .listen((value) {
+    print(value.output);
+  }).onError((e) {
+    log('streamGenerateContent exception', error: e);
+  });
 ```
+![Flutter gemini stream generates content](https://github.com/babakcode/flutter_gemini/assets/31356659/0a6f6eaa-684c-4708-b395-16176c7b0180)
+![Flutter Gemini stream](https://github.com/babakcode/flutter_gemini/assets/31356659/cabe2392-d584-4bbb-b5a9-a86db6b2d7f1)
+
+#### Text-only input
+
+This feature lets you perform natural language processing (NLP) tasks such as text completion and summarization.
+
+```dart
+final gemini = Gemini.instance;
+
+gemini.text("Write a story about a magic backpack.")
+  .then((value) => print( value?.output )) /// or value?.content?.parts?.last.text
+  .catchError((e) => print(e));
+```
+
+![Flutter gemini Text only example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*41dnttHItU2v4hobJ_DGSA.gif "Flutter_Gemini example")
+
+#### Text-and-image input
+
+If the input contains both text and image, You can send a text prompt with an image to the gemini-1.5-flash model to perform a vision-related task. For example, captioning an image or identifying what's in an image.
+
+```dart
+  final gemini = Gemini.instance;
+
+  final file = File('assets/img.png');
+  gemini.textAndImage(
+        text: "What is this picture?", /// text
+        images: [file.readAsBytesSync()] /// list of images
+      )
+      .then((value) => log(value?.content?.parts?.last.text ?? ''))
+      .catchError((e) => log('textAndImageInput', error: e));
+```
+
+###### Note that, there are changes on properties
+
+```diff
+- image: file.readAsBytesSync(), /// image
++ images: [file.readAsBytesSync()] /// list of images
+```
+
+![Flutter gemini Text and Image example gif](https://miro.medium.com/v2/resize:fit:828/format:webp/1*3JEeJaBRSpif6hOl2pt3RA.gif "Flutter_Gemini example")
