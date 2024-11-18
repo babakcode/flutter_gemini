@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 import 'package:flutter_gemini/src/models/part/part.dart';
@@ -59,9 +58,7 @@ class Gemini implements GeminiInterface {
               apiKey: apiKey),
           safetySettings: safetySettings,
           generationConfig: generationConfig,
-        ) {
-    HttpOverrides.global = MyHttpOverrides();
-  }
+        );
 
   /// singleton [instance] from main [Gemini] class
   static late Gemini instance;
@@ -308,13 +305,4 @@ class Gemini implements GeminiInterface {
         generationConfig: generationConfig,
         model: model,
         safetySettings: safetySettings,);
-}
-
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
 }

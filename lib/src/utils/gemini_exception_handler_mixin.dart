@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_gemini/src/repository/api_interface.dart';
 import 'package:flutter_gemini/src/utils/gemini_exception.dart';
@@ -27,8 +26,6 @@ mixin GeminiExceptionHandler on ApiInterface {
 
         throw GeminiException(e.message ?? 'Something went wrong!',
             statusCode: -1);
-      } else if (e is SocketException) {
-        throw GeminiException(e.message, statusCode: -1);
       }
 
       throw GeminiException(e, statusCode: -1);
