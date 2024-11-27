@@ -30,6 +30,17 @@ class GeminiImpl implements GeminiInterface {
       ..generationConfig = generationConfig;
   }
 
+  /// Processes a batch of texts and returns embeddings for each text.
+  /// Embeddings are vectors representing the semantic meaning of each input text.
+  ///
+  /// Parameters:
+  /// - `texts`: A list of strings that you want to embed.
+  /// - `modelName`: The name of the model to use (optional). Defaults to the model expected for embedding tasks.
+  /// - `safetySettings`: A list of safety settings to apply to the request (optional).
+  /// - `generationConfig`: Configuration parameters for generation (optional).
+  ///
+  /// Returns:
+  /// A list of embeddings for each input text as lists of numerical values.
   @override
   Future<List<List<num>?>?> batchEmbedContents(
     List<String> texts, {
@@ -67,6 +78,18 @@ class GeminiImpl implements GeminiInterface {
         .toList();
   }
 
+  /// Generates a chat-like response based on the provided input messages.
+  /// The conversation history is sent as a list of `Content` objects.
+  ///
+  /// Parameters:
+  /// - `chats`: A list of `Content` objects that represent the chat messages exchanged.
+  /// - `modelName`: The model name for generating the response (optional).
+  /// - `safetySettings`: Safety settings to apply (optional).
+  /// - `generationConfig`: Configuration for the generation process (optional).
+  /// - `systemPrompt`: An optional system instruction that guides the behavior of the model.
+  ///
+  /// Returns:
+  /// The last candidate response generated from the chat input, wrapped in the `Candidates` class.
   @override
   Future<Candidates?> chat(List<Content> chats,
       {String? modelName,

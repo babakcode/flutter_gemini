@@ -1,4 +1,4 @@
-# 3.0.0-dev.2
+# 3.0.0
 * ## new Feature
 1. Now you can use this package as a **dart** pkg.
 2. prompt

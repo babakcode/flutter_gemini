@@ -35,7 +35,18 @@ class Gemini implements GeminiInterface {
   /// to see request progress
   static bool? enableDebugging = false;
 
-  /// private constructor [Gemini._]
+  /// Private constructor for initializing the Gemini instance. This constructor
+  /// is used internally to configure the Gemini service with the necessary API key,
+  /// optional configuration settings, and safety options.
+  ///
+  /// **Parameters:**
+  /// - `apiKey` (required String): The API key required to authenticate requests.
+  /// - `baseURL` (optional String): The base URL for the API, defaults to a predefined constant if not provided.
+  /// - `headers` (optional Map<String, dynamic>): Custom headers to include in the API requests.
+  /// - `safetySettings` (optional List<SafetySetting>): Optional safety settings to apply to the API requests.
+  /// - `generationConfig` (optional GenerationConfig): Configuration related to text generation, such as model parameters.
+  /// - `version` (optional String): The API version to use. Defaults to a predefined constant if not provided.
+  /// - `disableAutoUpdateModelName` (optional bool, default false): Flag to disable auto-updating of the model name.
   Gemini._({
     /// [apiKey] is required property
     required String apiKey,
@@ -86,6 +97,19 @@ class Gemini implements GeminiInterface {
   ///   print(prompt?.output);
   /// }
   /// ```
+  /// /// Factory method to initialize and return a singleton instance of `Gemini`.
+  /// This method is used to configure and initialize the Gemini instance for the first time.
+  /// It ensures that only one instance of `Gemini` is created throughout the lifecycle of the application.
+  ///
+  /// **Parameters:**
+  /// - `apiKey` (required String): The API key for authenticating requests.
+  /// - `baseURL` (optional String): The base URL for the API.
+  /// - `headers` (optional Map<String, dynamic>): Custom headers for API requests.
+  /// - `safetySettings` (optional List<SafetySetting>): Safety settings to configure content filtering.
+  /// - `generationConfig` (optional GenerationConfig): Configuration for text generation.
+  /// - `enableDebugging` (optional bool): Flag to enable debugging (logs, verbose output).
+  /// - `version` (optional String): The API version to use.
+  /// - `disableAutoUpdateModelName` (default false): Flag to disable automatic model name updates.
   factory Gemini.init({
     required String apiKey,
     String? baseURL,
@@ -135,9 +159,32 @@ class Gemini implements GeminiInterface {
     return instance;
   }
 
-  /// [chat] or `Multi-turn conversations`
-  /// Using Gemini, you can build freeform conversations across multiple turns.
-  /// * not implemented yet
+  /// Facilitates a chat interaction by processing a list of `Content` objects
+  /// (representing chat messages) and generating a response.
+  ///
+  /// **Parameters:**
+  /// - `chats` (List<Content>): A list of chat messages in the conversation. Each
+  ///   message is represented as a `Content` object.
+  /// - `modelName` (String?, optional): The name of the AI model to use for the
+  ///   chat. Defaults to the system's preferred model if not provided.
+  /// - `safetySettings` (List<SafetySetting>?, optional): Configures safety
+  ///   settings for the response, such as filtering sensitive content.
+  /// - `generationConfig` (GenerationConfig?, optional): Controls the response
+  ///   generation behavior, like maximum length, temperature, etc.
+  /// - `systemPrompt` (String?, optional): A custom system-level prompt to guide
+  ///   the AI's behavior throughout the conversation.
+  ///
+  /// **Returns:**
+  /// - `Future<Candidates?>`: A future that resolves to a `Candidates` object
+  ///   containing the AI's response. Returns `null` if the process fails.
+  ///
+  /// **Example Usage:**
+  /// ```dart
+  /// final response = await Gemini.instance.chat([
+  ///   Content(role: "user", parts: [Part.text("Tell me a joke.")]),
+  /// ]);
+  /// print(response?.content?.parts.first);
+  /// ```
   @override
   Future<Candidates?> chat(List<Content> chats,
           {String? modelName,
@@ -150,6 +197,22 @@ class Gemini implements GeminiInterface {
           modelName: modelName,
           systemPrompt: systemPrompt);
 
+  /// Streams the ongoing chat interactions and responses in real-time. This method
+  /// allows you to send a list of chat messages (contents) and receive responses as a stream,
+  /// enabling real-time communication or processing of chat-like conversations.
+  ///
+  /// **Usage:**
+  /// This method provides a continuous stream of responses for each chat input. You can use it
+  /// to implement real-time conversational AI systems where the response is processed as it arrives.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// Gemini.instance.streamChat([
+  ///   Content(parts: [Part.text('Hello, how are you?')]),
+  /// ]).listen((response) {
+  ///   print(response.output); // Handle real-time responses here.
+  /// });
+  /// ```
   @override
   Stream<Candidates> streamChat(
     List<Content> chats, {
@@ -221,9 +284,30 @@ class Gemini implements GeminiInterface {
           safetySettings: safetySettings,
           modelName: modelName);
 
-  /// [text] Use the `generateContent` method to generate a response
-  /// from the model given an input message.
-  /// If the input contains only text, use the `gemini-pro` model.
+  /// This method is deprecated. Please use `prompt` or `promptStream` instead.
+  ///
+  /// Processes the provided text input to generate AI responses based on the
+  /// specified model and configuration settings.
+  ///
+  /// **Parameters:**
+  /// - `text` (String): The input text to process. This is the main content
+  ///   for which a response will be generated.
+  /// - `modelName` (String?, optional): The name of the AI model to be used
+  ///   for generating the response. If not provided, the default model is used.
+  /// - `safetySettings` (List<SafetySetting>?, optional): A list of safety
+  ///   settings to customize the response generation, such as filtering
+  ///   inappropriate content.
+  /// - `generationConfig` (GenerationConfig?, optional): Configuration
+  ///   settings to control the response generation behavior, like maximum
+  ///   length, temperature, and more.
+  ///
+  /// **Returns:**
+  /// - `Future<Candidates?>`: A future that resolves to a `Candidates` object,
+  ///   containing the generated AI responses. Returns `null` if the process fails.
+  ///
+  /// **Note:** This method is deprecated and will be removed in future versions.
+  /// Use the `prompt` or `promptStream` methods for enhanced functionality and
+  /// greater flexibility.
   @Deprecated('Please use `prompt` or `promptStream` instead')
   @override
   Future<Candidates?> text(String text,
@@ -254,6 +338,19 @@ class Gemini implements GeminiInterface {
           generationConfig: generationConfig,
           modelName: modelName);
 
+  /// Embeds the provided text content into a vector representation, typically used for
+  /// similarity search, semantic analysis, or other tasks that require a vectorized
+  /// representation of the input text.
+  ///
+  /// **Usage:**
+  /// This method takes a string of text and returns its vectorized embedding (a list of numbers),
+  /// which can be used for various machine learning tasks such as search, clustering, or recommendation.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final embedding = await Gemini.instance.embedContent('This is a sample text');
+  /// print(embedding); // A list of numbers representing the text's embedding.
+  /// ```
   @override
   Future<List<num>?> embedContent(String text,
           {String? modelName,
@@ -270,12 +367,30 @@ class Gemini implements GeminiInterface {
   @override
   Future<void> cancelRequest() => _impl.cancelRequest();
 
+  /// Sends a request to the AI and receives a single response. This is the
+  /// standard method for one-off prompts.
+  ///
+  /// **Parameters:**
+  /// - `parts` (List<Part>, required): A list of `Part` objects representing the
+  ///   input data (e.g., text, files, binary data).
+  /// - `model` (String?, optional): The name of the AI model to use. Defaults
+  ///   to the system's preferred model if not provided.
+  /// - `safetySettings` (List<SafetySetting>?, optional): Configures safety
+  ///   settings for the response generation.
+  /// - `generationConfig` (GenerationConfig?, optional): Controls the response
+  ///   generation behavior, like maximum length, temperature, etc.
+  ///
+  /// **Returns:**
+  /// - `Future<Candidates?>`: A future that resolves to a `Candidates` object
+  ///   containing the generated response.
+  ///
+  /// **Example Usage:**
   /// ```dart
   /// Gemini.instance.prompt(parts: [
-  ///     Part.text('Write a story about a magic backpack'),
-  ///   ]).then((value) {
-  ///     print(value?.output);
-  ///   });
+  ///   Part.text('What are the benefits of renewable energy?'),
+  /// ]).then((value) {
+  ///   print(value?.content?.parts.first);
+  /// });
   /// ```
   @override
   Future<Candidates?> prompt({
@@ -291,14 +406,31 @@ class Gemini implements GeminiInterface {
         safetySettings: safetySettings,
       );
 
+  /// Sends a request to the AI and listens to a real-time stream of responses.
+  /// Ideal for scenarios requiring immediate feedback or partial results.
   ///
+  /// **Parameters:**
+  /// - `parts` (List<Part>, required): A list of `Part` objects representing the
+  ///   input data (e.g., text, files, binary data).
+  /// - `model` (String?, optional): The name of the AI model to use. Defaults
+  ///   to the system's preferred model if not provided.
+  /// - `safetySettings` (List<SafetySetting>?, optional): Configures safety
+  ///   settings for the response generation.
+  /// - `generationConfig` (GenerationConfig?, optional): Controls the response
+  ///   generation behavior, like maximum length, temperature, etc.
+  ///
+  /// **Returns:**
+  /// - `Stream<Candidates?>`: A stream that emits `Candidates` objects containing
+  ///   the generated responses.
+  ///
+  /// **Example Usage:**
   /// ```dart
-  ///Gemini.instance.promptStream(parts: [
-  ///    Part.text('Write a story about a magic backpack.'),
-  ///  ]).listen((value) {
-  ///    print(value?.output);
-  ///  });
-  ///```
+  /// Gemini.instance.promptStream(parts: [
+  ///   Part.text('Describe the future of AI in 50 years.'),
+  /// ]).listen((value) {
+  ///   print(value?.content?.parts.first);
+  /// });
+  /// ```
   @override
   Stream<Candidates?> promptStream(
           {required List<Part> parts,
